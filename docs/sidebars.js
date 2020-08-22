@@ -114,6 +114,12 @@ module.exports = {
   systemsSidebar: {
       'DDrone V2': [
           'systems/ddrone_v2/ddrone',
+          'systems/ddrone_v2/getting-started',
+          'systems/ddrone_v2/VIO',
+          'systems/ddrone_v2/motion-planning',
+          'systems/ddrone_v2/tracking-and-detection',
+          'systems/ddrone_v2/simulator',
+          'systems/ddrone_v2/web-ui',
       ],
       'Simulations': [
           'systems/unity-SITL',
