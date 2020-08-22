@@ -71,7 +71,7 @@ function Home() {
           <div className={styles.buttons}>
             <Link
               className={clsx(
-                'button button--light button--lg',
+                'button button--success button--lg',
                 styles.getStarted,
               )}
               to={useBaseUrl('docs/examples/doc1')}>
@@ -80,7 +80,7 @@ function Home() {
             &nbsp;
             <Link
               className={clsx(
-                'button button--light button--lg',
+                'button button--secondary  button--lg',
               )}
               to={useBaseUrl('docs/examples/doc0')}>
               Start a New Page
