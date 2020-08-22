@@ -32,6 +32,11 @@ const features = [
     description: (
       <>
         The source files are located in <a href="smb://deptnas.nus.edu.sg/tsl/Research/Centre%20Flight%20Science/Intelligent%20Unmanned%20Systems/Research%20Data%20Backup/Users/00_Tech_Details/docs">this folder (Linux)</a>, or <a href="file://deptnas.nus.edu.sg/tsl/Research/Centre%20Flight%20Science/Intelligent%20Unmanned%20Systems/Research%20Data%20Backup/Users/00_Tech_Details/docs">this folder (Windows)</a>
+
+        <br></br>
+        
+        The website is being build twice a day (12:30 noon and 00:30 at night), at this <a href="http://172.18.72.192/tech-details/">link</a>. The live preview is availalbe at this  <a href="http://172.18.72.192:8888/tech-details/">link</a>.
+
       </>
     ),
   },
@@ -66,7 +71,7 @@ function Home() {
           <div className={styles.buttons}>
             <Link
               className={clsx(
-                'button button--outline button--secondary button--lg',
+                'button button--light button--lg',
                 styles.getStarted,
               )}
               to={useBaseUrl('docs/examples/doc1')}>
@@ -75,11 +80,10 @@ function Home() {
             &nbsp;
             <Link
               className={clsx(
-                'button button--outline button--secondary button--lg',
-                styles.getStarted,
+                'button button--light button--lg',
               )}
-              to='http://172.18.72.192:8888/tech-details/'>
-              Live Preview Site
+              to={useBaseUrl('docs/examples/doc0')}>
+              Start a New Page
             </Link>
           </div>
         </div>

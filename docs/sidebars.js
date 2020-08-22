@@ -1,12 +1,14 @@
 module.exports = {
   // examples
   examplesSidebar: {
-    Docusaurus: [
-    'examples/doc1', 
-    'examples/doc2',
-    'examples/doc3'
+    'Docusaurus': [
+        'examples/doc0', 
+        'examples/doc1', 
+        'examples/doc2',
+        'examples/doc3',
+        // 'examples/mypage',
     ],
-    Features: ['examples/mdx'],
+    'Features': ['examples/mdx'],
   },
 
   // hardware

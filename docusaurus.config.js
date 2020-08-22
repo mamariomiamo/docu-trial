@@ -12,7 +12,17 @@ module.exports = {
   organizationName: 'tsl', // Usually your GitHub org/user name.
   projectName: 'tech-detail', // Usually your repo name.
 
+  // for rendering latex
+  stylesheets: [
+    {
+      href: 'https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css',
+      type: 'text/css',
+      integrity: 'sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq',
+      crossorigin: 'anonymous',
+    },
+  ],
 
+  // for light theme code style
   themeConfig: {
         prism: {
           theme: require('prism-react-renderer/themes/github'),
@@ -59,7 +69,7 @@ module.exports = {
               position: 'left',
               items: [
                 {
-                  // activeBasePath:'docs/systems/',
+                  // activeBasePath:'docs/systems/ddrone_v2',
                   label: 'Ddrone V2',
                   to: 'docs/systems/ddrone_v2/ddrone'
                 },
@@ -154,7 +164,7 @@ module.exports = {
 
             // Examples
             {
-              to: 'docs/examples/doc1',
+              to: 'docs/examples/doc0',
               activeBasePath: 'docs/examples',
               label: 'Examples',
               position: 'left',
