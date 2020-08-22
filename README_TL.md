@@ -41,8 +41,8 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 # *  *  *  *  * user-name  command to be executed
 
 
-30 12 * * * cd /home/tsluser/docusaurus_html/tl-tech-details/ && yarn build
-30 0 * * * cd /home/tsluser/docusaurus_html/tl-tech-details/ && yarn build
+30 12 * * * /home/tsluser/docusaurus_html/tl-tech-details/cron_build.sh
+30 0 * * * /home/tsluser/docusaurus_html/tl-tech-details/cron_build.sh
 
 # check for error at /var/log/cron
 ```
