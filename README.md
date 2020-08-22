@@ -10,8 +10,10 @@ $ yarn
 
 ### Local Development
 
-```
+``` bash
 $ yarn start
+# using different port and listen to all IPs
+$ yarn start -p 8888 -h 0.0.0.0 --no-open
 ```
 
 This command starts a local development server and open up a browser window. Most changes are reflected live without having to restart the server.

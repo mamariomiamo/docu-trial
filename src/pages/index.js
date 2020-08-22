@@ -8,32 +8,30 @@ import styles from './styles.module.css';
 
 const features = [
   {
-    title: <>Easy to Use</>,
+    title: <>Markdown Language</>,
     imageUrl: 'img/undraw_docusaurus_mountain.svg',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Docusaurus V2 is used to build this technical details website, which support markdown language, latex and all React features.
+        You may find some good tutorials on Markdown <a href="./docs/examples/doc1">here</a>. Have fun!
       </>
     ),
   },
   {
-    title: <>Focus on What Matters</>,
+    title: <>Create Pages</>,
     imageUrl: 'img/undraw_docusaurus_tree.svg',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Every page is a <code>.md</code> file, arranged by folders. After creating a file, edit the <code>sidebars.js</code> and <code>docusaurus.config.js</code> accordingly, to make the page visible for browsing.
       </>
     ),
   },
   {
-    title: <>Powered by React</>,
+    title: <>Where to Edit</>,
     imageUrl: 'img/undraw_docusaurus_react.svg',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        The source files are located in <a href="smb://deptnas.nus.edu.sg/tsl/Research/Centre%20Flight%20Science/Intelligent%20Unmanned%20Systems/Research%20Data%20Backup/Users/00_Tech_Details/docs">this folder (Linux)</a>, or <a href="file://deptnas.nus.edu.sg/tsl/Research/Centre%20Flight%20Science/Intelligent%20Unmanned%20Systems/Research%20Data%20Backup/Users/00_Tech_Details/docs">this folder (Windows)</a>
       </>
     ),
   },
@@ -71,8 +69,17 @@ function Home() {
                 'button button--outline button--secondary button--lg',
                 styles.getStarted,
               )}
-              to={useBaseUrl('docs/')}>
-              Get Started
+              to={useBaseUrl('docs/examples/doc1')}>
+              Markdown Tutorials
+            </Link>
+            &nbsp;
+            <Link
+              className={clsx(
+                'button button--outline button--secondary button--lg',
+                styles.getStarted,
+              )}
+              to='http://172.18.72.192:8888/tech-details/'>
+              Live Preview Site
             </Link>
           </div>
         </div>
