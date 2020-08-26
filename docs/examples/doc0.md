@@ -6,6 +6,19 @@ sidebar_label: New Page Creation
 
 ## Overview
 
+The pages are available as source code from our server, available as remote folder. It can be accessed by VS Code directly, or using mounted network drive option.
+
+### Access the Folder in VS Code (Remote SSH)
+:::tip
+This is the more convenient way of editting the documentation files, and at the same time obtain a command prompt.
+:::
+
+In VS Code, install plugin `Remote - SSH`. Then at the bottom-left corner, press the green button `open a remote window`, follow the prompt at the top to proceed for host (`172.18.72.192`), username and password (given to you) key-ins.
+
+> The website folder is located at `~/docusaurus_html/tl-tech-details`.
+
+![](./img/vscode_remote_ssh.png)
+
 ### Access the Folder (as Files)
 All website generation files is located at our server within NUS intranet (VPN is needed if accessing outside NUS)
 - `smb://172.18.72.192/techdetails/` for Linux, and
@@ -22,20 +35,12 @@ On Linux machines, go to the file explorer, in the location bar, key in the addr
 | ![](./img/smb_linux_address_bar.png) | ![](./img/smb_linux_address_bar_credentials.png) |
 |---|---|
 
-On Windows machines, go to file explorer --> This PC --> Map network drive, then key in the credentials (switch domain to WORKGROUP)
+On Windows machines, go to file explorer --> This PC (Computer) --> Map network drive, then key in the credentials (switch domain to WORKGROUP)
 
 | ![](./img/map_network_drive.PNG) | ![](./img/map_network_drive_credentials.PNG) |
 |---|---|
 
 :::
-
-### Access the Folder in VS Code (Remote SSH)
-
-This is a more convenient way of editting the documentation files, and at the same time obtain a command prompt.
-
-In VS Code, install plugin `Rmote - SSH`. Then at the bottom-left corner, press the green button `open a remote window`, follow the prompt at the top to proceed for host, username and password key-ins.
-
-![](./img/vscode_remote_ssh.png)
 
 ### File Functions
 

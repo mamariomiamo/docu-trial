@@ -12,6 +12,9 @@ module.exports = {
   organizationName: 'tsl', // Usually your GitHub org/user name.
   projectName: 'tech-detail', // Usually your repo name.
 
+  // plugin
+  plugins: [require.resolve('docusaurus-lunr-search')],
+
   // for rendering latex
   stylesheets: [
     {
@@ -88,15 +91,15 @@ module.exports = {
     
             // Linux
             {
-              to: 'docs/linux/desktop/gnome-shell-extensions',
+              to: 'docs/linux/getting-started/gnome-shell-extensions',
               activeBasePath: 'docs/linux/',
               label: 'Linux',
               position: 'left',
               items: [
                 {
-                  activeBasePath:'docs/linux/desktop/',
-                  label: 'Desktop',
-                  to: 'docs/linux/desktop/gnome-shell-extensions'
+                  activeBasePath:'docs/linux/getting-started/',
+                  label: 'Getting Started',
+                  to: 'docs/linux/getting-started/overview'
                 },
                 {
                   activeBasePath:'docs/linux/packages',
@@ -150,9 +153,14 @@ module.exports = {
     
               items: [
                 {
+                  activeBasePath:'docs/research/flight-data',
+                  label: 'Flight Data',
+                  to: 'docs/research/flight-data/flight-data-analysis'
+                },
+                {
                   activeBasePath:'docs/research/calibration',
                   label: 'Sensor Calibration',
-                  to: 'docs/research/calibration/index'
+                  to: 'docs/research/calibration/getting-started'
                 },
                 {
                   activeBasePath:'docs/research/vio',
@@ -166,7 +174,7 @@ module.exports = {
             {
               to: 'docs/examples/doc0',
               activeBasePath: 'docs/examples',
-              label: 'Examples',
+              label: 'Examples (To Edit)',
               position: 'left',
             },
             {to: 'blog', label: 'Blog', position: 'left'},
@@ -228,8 +236,7 @@ module.exports = {
           // homePageId: 'examples/doc1',
           sidebarPath: require.resolve('./docs/sidebars.js'),
           // Please change this to your repo.
-          editUrl:
-            'file://deptnas.nus.edu.sg/TSL/Research/Centre%20Flight%20Science/Intelligent%20Unmanned%20Systems/Research%20Data%20Backup/Users/00_Tech_Details',
+          // editUrl: 'file://deptnas.nus.edu.sg/TSL/Research/Centre%20Flight%20Science/Intelligent%20Unmanned%20Systems/Research%20Data%20Backup/Users/00_Tech_Details',
           
           showLastUpdateTime: true,
           remarkPlugins: [remarkMath],
@@ -238,8 +245,7 @@ module.exports = {
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
-          editUrl:
-            'file://deptnas.nus.edu.sg/TSL/Research/Centre%20Flight%20Science/Intelligent%20Unmanned%20Systems/Research%20Data%20Backup/Users/00_Tech_Details',
+          // editUrl: 'file://deptnas.nus.edu.sg/TSL/Research/Centre%20Flight%20Science/Intelligent%20Unmanned%20Systems/Research%20Data%20Backup/Users/00_Tech_Details',
           remarkPlugins: [remarkMath],
           rehypePlugins: [[rehypeKatex, {strict: false}]],
         },

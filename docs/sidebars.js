@@ -52,10 +52,19 @@ module.exports = {
 
   // linux
   linuxSidebar: {
-      'Desktop Convenience': [
-          'linux/desktop/gnome-shell-extensions',
+      'Getting Started': [
+          'linux/getting-started/installation',
+          'linux/getting-started/overview',
+          'linux/getting-started/basics-linux-os',
+          'linux/getting-started/basics-bash-file-system',
+          'linux/getting-started/basics-bash-scripting',
+          'linux/getting-started/basics-package-mgt',
+          'linux/getting-started/basics-usb-devices',
+          'linux/getting-started/intermediate-network-drive-samba',
+          'linux/getting-started/intermediate-ssh-scp',
+          'linux/getting-started/gnome-shell-extensions',
       ],
-      'Software Packages': [
+      'Common Package Install': [
           'linux/packages/file-systems',
           'linux/packages/gstreamer',
           'linux/packages/latex',
@@ -64,6 +73,7 @@ module.exports = {
           'linux/packages/opencv',
       ],
       'ROS': [
+          'linux/ros/installation',
           'linux/ros/using-catkin-build',
           'linux/ros/roslib.js',
       ],
@@ -99,10 +109,16 @@ module.exports = {
 
   // research
   researchSidebar: {
+      'Flight Data': [
+        'research/flight-data/flight-data-analysis',
+      ],
       'Camera Calibration': [
-      'research/calibration/index',
-      'research/calibration/using-kalibr-calibration',
-      'research/calibration/verify-calibration',
+      'research/calibration/getting-started',
+      'research/calibration/calibration-target-params',
+      'research/calibration/kalibr-result-conventions',
+      'research/calibration/calibration-procedures',
+      'research/calibration/verify-by-kalibr-validator',
+      'research/calibration/verify-by-triangulation-depth',
       ],
       'VIO': [
       'research/vio/basalt-backend',
@@ -124,6 +140,7 @@ module.exports = {
       'Simulations': [
           'systems/unity-SITL',
           'systems/unity-HITL',
+          'systems/unity-simulator',
       ],
       'Vicon': [
           'systems/vicon',

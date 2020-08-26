@@ -11,6 +11,21 @@ screen -S docusaurus
 - Use Ctrl+A then Ctrl+D to detach the terminal
 - Type `screen -r` to re-attach the terminal
 
+## Add Offline Search Capabilities
+
+Package available at:
+https://github.com/lelouch77/docusaurus-lunr-search
+
+``` bash
+yarn add docusaurus-lunr-search
+
+# copy theme files to src
+yarn swizzle docusaurus-lunr-search SearchBar
+```
+
+add `plugins: [require.resolve('docusaurus-lunr-search')],` in `docusaurus.config.js` section `module.exports`.
+
+
 ## Using `cron` to Schedule Daily `yarn build`
 
 ### Setup
