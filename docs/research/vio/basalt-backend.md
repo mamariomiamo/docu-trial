@@ -1,6 +1,6 @@
 ---
 hide_title: true
-sidebar_label: Basalt Backend (vioestimator)
+sidebar_label: Basalt Backend (VioEstimator)
 ---
 
 # Basalt Backend Walkthrough

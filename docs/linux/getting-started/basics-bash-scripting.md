@@ -4,14 +4,15 @@ sidebar_label: Basics - More Bash Scripting
 ---
 # Basics - More Bash Scripting
 
+You could start your learning here:
+<iframe width="560" height="315" src="https://www.youtube.com/embed/k91lumNE2zU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+
 ## Reading Documentation about Commands
 [The Edx Link (Chapter 8)](https://courses.edx.org/courses/course-v1:LinuxFoundationX+LFS101x+1T2017/course/)
 - `man COMMAND`
 - `COMMAND -h` or `COMMAND --help`
 
-## Basic Commands
-
-
+## Quick Reference - Basic Commands
 
 - `cat`,`less`,`more` to print files,
 - `head`, `tail` to print only the two ends of the file

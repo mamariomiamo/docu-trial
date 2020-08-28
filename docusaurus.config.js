@@ -165,7 +165,7 @@ module.exports = {
                 {
                   activeBasePath:'docs/research/vio',
                   label: 'VIO',
-                  to: 'docs/research/vio/basalt-backend'
+                  to: 'docs/research/vio/basalt-overview'
                 },
               ]
             },

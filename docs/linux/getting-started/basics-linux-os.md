@@ -12,10 +12,10 @@ What is an operation system and why do we need them in the first place? This is 
 View the following video to get another overview of the operating system:
 
 **Operating Systems: Crash Course** (history)
-<iframe width="560" height="315" src="https://www.youtube.com/embed/26QPDBe-NB8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/26QPDBe-NB8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
 
 **Operating System Basics** (device driver, scheduler, memory management)
-<iframe width="560" height="315" src="https://www.youtube.com/embed/9GDX-IyZ_C8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/9GDX-IyZ_C8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
 
 
 > _**Question**: Why do we need an operating system? When do we not needing them?_
@@ -38,7 +38,7 @@ Most devices should be found by one of the following:
 >_**Exercice**: Obtain as much as information about your hardware devices using the commands above._
 
 **"Everything is a file" in UNIX**
-<iframe width="560" height="315" src="https://www.youtube.com/embed/dDwXnB6XeiA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dDwXnB6XeiA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
 
 Lastly, here is a more in-depth video regarding the under-the-hood operations behind some of the syscalls: [UNIX System Calls (YouTube, 50min)](https://www.youtube.com/watch?v=2DrjQBL5FMU).
 
@@ -49,7 +49,7 @@ In addition, for the longest time, our CPU-based machines runs program code in a
 Operating system also provides user interfaces through either **terminals** (command prompt) or a **graphical interface** (desktop environment, the X Window system in Linux). It is capable of handling multiple user inputs at the same time. Getting to use terminal (and technically, its underlying shell program, e.g. Bash) is important for using Linux. _Why?_ Immediately after this section, we will jump straight into using the Bash shell. The interface through the commandline is normally achieved through `stdin` / `stdout`, where text data (and possibly raw binary data) can flow in and out.
 
 **Unix terminals and shells** (history of terminal, terminal character device file, stdin/stdout, terminal emulator, X Window system)
-<iframe width="560" height="315" src="https://www.youtube.com/embed/07Q9oqNLXB4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/07Q9oqNLXB4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
 
 The most important thing to note here is that virtually all program on Linux natively support user interface through terminals. On Linux, the glue between the terminal and the actual running program is the shell, which is responsible for parsing the commandline line input obtained from the terminal like `cd` or `mkdir new_directory` to execute the right commands. Later on we will learn extensively about the Bash shell.
 

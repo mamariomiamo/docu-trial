@@ -1,9 +1,9 @@
 ---
 hide_title: true
-sidebar_label: Basalt Frontend (optical-flow)
+sidebar_label: Basalt Frontend (Optical Flow)
 ---
 
-# Front End
+# Basalt Front End
 The front end include two types of optical flow: frame to frame optical flow and patch optical frame. 
 
 ## Initialization

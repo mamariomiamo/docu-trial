@@ -9,7 +9,8 @@ by triangulation
 
 @jalvin
 
-Verify calibration by checking the depth of different points in the images.
+Verify the camera calibration by checking the depth of different points in the images.
+Ensure that you have the yaml calibration file ready and take a few photos with the cameras.
 
 Git Repository:
 https://github.com/STEMO-CS5340/position_proposal_estimator
@@ -33,4 +34,11 @@ make
 ./depth_verification_test
 ```
 
-Click on the same point in both images. Terminal will display the direction unit vertor and the distance between the point and origin, and also displays the world coordinates of the point in the next line.
+Click on the same point in both images. Terminal will display the direction unit vertor and the distance between the point and origin, and also displays the world coordinates of the point in the next line. Verify that the distance is correct.
+
+![example 1](./Depth_verification_eg1.jpg)
+
+# Take note
+Try to click on the point as precisely as possible. The algorithm is sensitive to slight changes, so selecting the point slightly off can give unexpected result.
+
+![example 2](./Depth_verification_eg2.jpg)

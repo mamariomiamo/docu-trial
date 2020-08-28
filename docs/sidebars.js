@@ -46,7 +46,8 @@ module.exports = {
   },
   px4firmwareSidebar: {
       'PX4 Firmware': [
-      'hardware/px4-firmware/time-synchronisation',
+        'hardware/px4-firmware/mavlink-imu',
+        'hardware/px4-firmware/time-synchronisation',
       ]
   },
 
@@ -59,7 +60,7 @@ module.exports = {
           'linux/getting-started/basics-bash-file-system',
           'linux/getting-started/basics-bash-scripting',
           'linux/getting-started/basics-package-mgt',
-          'linux/getting-started/basics-usb-devices',
+          'linux/getting-started/basics-query-devices',
           'linux/getting-started/intermediate-network-drive-samba',
           'linux/getting-started/intermediate-ssh-scp',
           'linux/getting-started/gnome-shell-extensions',
@@ -121,8 +122,10 @@ module.exports = {
       'research/calibration/verify-by-triangulation-depth',
       ],
       'VIO': [
+      'research/vio/basalt-overview',
       'research/vio/basalt-backend',
       'research/vio/basalt-frontend',
+      'research/vio/basalt-tests',
       ],
   },
 
