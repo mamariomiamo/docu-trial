@@ -46,8 +46,11 @@ module.exports = {
   },
   px4firmwareSidebar: {
       'PX4 Firmware': [
+        'hardware/px4-firmware/px4-overview',
+        'hardware/px4-firmware/px4-toolchain-installation-setup',
         'hardware/px4-firmware/mavlink-imu',
         'hardware/px4-firmware/time-synchronisation',
+        'hardware/px4-firmware/px4-camera-trigger',
       ]
   },
 

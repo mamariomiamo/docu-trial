@@ -59,7 +59,7 @@ module.exports = {
                 {
                   activeBasePath:'docs/hardware/px4-firmware',
                   label: 'PX4 Firmware',
-                  to: 'docs/hardware/px4-firmware/time-synchronisation'
+                  to: 'docs/hardware/px4-firmware/px4-overview'
                 },
               ]
             },

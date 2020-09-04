@@ -1,6 +1,6 @@
 ---
 hide_title: true
-sidebar_label: Time Synchronisation
+sidebar_label: About Time Synchronisation
 ---
 
 # FCU-OBC Time Synchronisation
@@ -32,7 +32,7 @@ Fortunately, this is often the case. Lets do some quick maths in the case of IMU
 
 
 
-### The Good Stuff
+### Correspondance with Known Latency and Sampling Period
 
 #### Latency for IMU Data over UART
 
@@ -49,18 +49,16 @@ Putting into context, with a 20Hz rate of IMU-cameras correspondence frequency, 
 
 In summary, the good stuff here is that we have the **slack time** (between IMU data and camera data) predicable and less than the **sampling period**. We could use a trivial algorithm to match the camera data to the closest IMU data which is *strictly earlier* in OBC-time domain.
 
-### The Big But...
-
-Now it's a good time to reflect the current approach:
+### Potential Issues Working without Time Synchronisation
 
 **Pros**:
 
 - No software architectural dependency outside OBC
 
 **Cons**:
-
-- Case-by-case analysis
-- Non-realtime operating system
+- All sensor data need to be triggered by the same physical event, and the precise timing of that event cannot be determined precisely (can only be estimated based on the communication delays etc.)
+- Case-by-case analysis needed
+- Non-realtime operating system may cause jittering which corrupts the correspondence
 - Subject to system CPU loading and other resource constraints
 
 The obvious advantage of this no-synchornisation approach is that there is no dependency outside the OBC, as we disregard all other time domains, and only work on time of arrival timings in the OBC-time domain.
@@ -69,7 +67,9 @@ However, as we have seen, the correctness of such approach need to be analysed c
 
 **Known issue**: In not-so rare cases, camera data may arrive to OBC earlier than the triggering. This may caused by multiple factors, such as the USB kernel was allocated the right time to transmit the data over, while the UART kernel is stucked waiting for scheduling. I would like to term this effect as **jitter**, as this normally have something to do on how the OS schedule kernel tasks.
 
-For a reference on how the implementation may look like for a IMU-Camera synchronisation, refer here [camera_imu_sync.cpp](https://github.com/chengguizi/tiscamera_ros/blob/master/include/camera_imu_sync.hpp).
+In addition, there is no way to know the actual time that the correspondence is happening, which hides behind the non-deterministic communication delay, buffering delay etc.
+
+For a reference on how the implementation may look like for a IMU-Camera synchronisation, without assuming time synchronisation, refer here [camera_imu_sync.cpp](https://github.com/chengguizi/tiscamera_ros/blob/master/include/camera_imu_sync.hpp).
 
 ## Doing Time Synchronisation using MAVLink
 
@@ -77,7 +77,7 @@ For a reference on how the implementation may look like for a IMU-Camera synchro
 
 In the platform we used, an implementation has been done using MAVLink protocol, implemented in both PX4 Firmware and Mavros package.
 
-**Working Principle** ([Reference](https://github.com/mavlink/mavlink-devguide/issues/194))
+### Working Principle ([Reference](https://github.com/mavlink/mavlink-devguide/issues/194))
 
 The host (both side CAN be the host at the SAME time) sends a [TIMESYNC message](https://mavlink.io/en/messages/common.html#TIMESYNC), which contain two fields `tc1` (filled with zero) and `ts1`(filled with current hardware time in nanoseconds). 
 
@@ -86,5 +86,29 @@ As the receiver, when a TIMESYNC message is received, there are two cases:
 - `tc1` == 0, then the message just make a half-round trip. The receiver sends back `tc1` filled with its own current hardware timestamp in nanoseconds, and the original `ts1` field
 - `tc1` != 0, then the message has made the full round trip. Then the current hardware time subtracted by the `ts1` field will give the round trip time, and tc1 - (current time + `ts1`) / 2 will give the offset.
 
+The logics are both implemented in mavros (`sys_time.cpp`) and in PX4 firmware. On mavros, the estimation is availalbe at topic `/mavros/timesync_status`, like example below:
 
+```yaml
+header: 
+  seq: 172
+  stamp: 
+    secs: 1013
+    nsecs: 301973092
+  frame_id: ''
+remote_timestamp_ns: 35922878000
+observed_offset_ns: 977378604936
+estimated_offset_ns: 977378507661
+round_trip_time_ms: 0.979619979858
+```
 
+### Synchronising Timestamp
+
+:::note
+The content below is based on the modified version of [mavros](https://github.com/chengguizi/mavros/tree/monotonic).
+
+The original mavros only allows the time synchronisation to be performed against OBC's realtime clock (Wallclock / UNIX Time). This is potentially problematic for us, as realtime clock can jump, whenever a NTP timesync happens over the network.
+
+`clock_source: monotonic # realtime (ros::Time::now()) or monotonic (MONOTOMIC_TIME)` option has been added to allow mavros to track against monotonic clock (hardware time) on the OBC, instead of the wallclock. (encapsulated in the `get_time_now()`)
+:::
+
+To turn on time synchronisation, just set the `timesync_mode` option to be `MAVLINK`, and `clock_source` to be `monotonic`. When `mavros` first starts up, it requires **tens of seconds** to stabilise the estimation. A info prompt will be shown after the synchronisation estimate has been completed.

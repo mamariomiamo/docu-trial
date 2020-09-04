@@ -19,18 +19,52 @@ Do not download from [official repository](https://github.com/ethz-asl/kalibr)! 
 
 Git Repository: https://github.com/chengguizi/kalibr (default master branch)
 
-Kalibr is a ROS package, so it is to be cloned into the `src/` directory of the caktin workspace.
+Kalibr is a ROS package, so it is to be cloned into the  `src/`  directory of the caktin workspace.
 
 This version builds on top of the official repository, which:
-- works with a calibration board with non-zero `low_id` 
-- works correctly with Double Sphere Camera Model
 
-``` bash
-# cd into the src folder of the catkin workspace
-git clone https://github.com/chengguizi/kalibr
-catkin build kalibr
-# it takes quite a while to compile...
-```
+-   works with a calibration board with non-zero  `low_id`
+-   works correctly with Double Sphere Camera Model
+
+# Installation processs
+Ensure that ROS melodic and catkin are installed.
+
+Install the build and run dependencies:
+
+    sudo apt-get install python-setuptools python-rosinstall ipython libeigen3-dev libboost-all-dev doxygen libopencv-dev ros-melodic-vision-opencv ros-melodic-image-transport-plugins ros-melodic-cmake-modules python-software-properties software-properties-common libpoco-dev python-matplotlib python-scipy python-git python-pip ipython libtbb-dev libblas-dev liblapack-dev python-catkin-tools libv4l-dev 
+    
+    sudo pip install python-igraph --upgrade
+
+Create a catkin workspace inside catkin folder
+
+
+    mkdir -p ~/kalibr_workspace/src    
+    cd ~/kalibr_workspace    
+    source/opt/ros/melodic/setup.bash    
+    catkin init    
+    catkin config --extend /opt/ros/melodic    
+    catkin config --merge-devel # Necessary for catkin_tools >= 0.4. 
+    catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
+
+Navigate to catkin's src folder, clone custom repo
+
+    cd ~/kalibr_workspace/src  
+    git clone https://github.com/chengguizi/kalibr.git
+
+Make kalibr
+
+    catkin make kalibr
+
+It takes a while to compile.
+Install Sophus
+
+    sudo apt-get install ros-melodic-sophus
+
+Once the build is finished you have to source the catkin workspace setup to use Kalibr
+source ~/kalibr_workspace/devel/setup.bash
+
+More on catkin build, refer  [here](http://172.18.72.192:8888/tech-details/docs/linux/ros/using-catkin-build). To verify the installation, command  `kalibr_calibrate_cameras`  should exist.
+
 
 
 More on catkin build, refer [here](../../linux/ros/using-catkin-build.md). To verify the installation, command `kalibr_calibrate_cameras` should exist.

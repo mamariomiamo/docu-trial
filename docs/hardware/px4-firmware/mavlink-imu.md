@@ -1,9 +1,39 @@
 ---
 hide_title: true
-sidebar_label: MAVLink IMU
+sidebar_label: MAVLink IMU Topics
 ---
 
-# MAVLink IMU
+# MAVLink IMU Topics
+
+High rates of IMU data is necessary information for visual-inertial navigation and other tasks. However, it can be tricky to increase the data frequency from the default 50Hz.
+
+In addition, it can be confusing to see that there are a few different types of IMU data available an [issue discussed here](https://github.com/PX4/Firmware/issues/9796).
+
+In general, the topic [`HIGHRES_IMU`](https://mavlink.io/en/messages/common.html#HIGHRES_IMU) should be used for feeding into the vision algorithm. The `SCALED_IMUx` topics are raw readings from the respective IMUs, which is not fused. The `HIGHRES_IMU` message comesfrom the uORB message `sensor_combined`, which incorporates sensor fusion as well as temperature correction features (in `voted_sensors_update.cpp`). In addition, in mavros, `HIGHRES_IMU` will supercede `SCALED_IMUx` when the MAVLink message is available. The corresponding ROS topic is `/mavros/imu/data_raw`.
+
+:::caution
+
+The ROS message `/mavros/imu/data` is an aggregation of a mixture of MAVLINK messages. The data rate is determined either by `ATTITUDE` or `ATTITUDE_QUATERNION` (take precedence), NOT the IMU data rates from one of the topics: `RAW_IMU`, `SCALED_IMUx` or `HIGHRES_IMU`.
+
+
+Also, `/mavros/imu/data` is documented in the code to be `ENU` frame, but in reality carries the same orientation as the `data_raw`, which is `NWU` (`flu`).
+
+:::
+
+## IMU Data Rates
+
+`HIGHRES_IMU` has a default rate limiting at 50Hz, when at `ONBOARD` (with OBC) or `CONFIG` (USB) mode. This topic is published whenever any of the field in the message is refreshed. Therefore, the actual rates, where the IMU data relevant to the visual algorithm is updated, might be lower. For example, if the rate is set at 200Hz, the actual rates might only achieve 150Hz observed on the final ROS topic `/mavros/imu/data_raw`. Therefore, set the data rates to be higher when necessary.
+
+### Add `extras.txt`
+
+Place the `extras.txt` file in the `etc/` folder within the SD card for Pixhawk.
+
+```bash
+mavlink stream -d /dev/ttyACM0 -s HIGHRES_IMU -r 300
+mavlink stream -d /dev/ttyS2 -s HIGHRES_IMU -r 300
+```
+
+### MAVLINK Defaults in PX4 Firmware
 
 ```cpp title="mavlink.cpp"
 switch (_mode) {

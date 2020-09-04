@@ -2,86 +2,25 @@
 hide_title: true
 sidebar_label: Flight Data Analysis
 ---
-
-## FlightPlot
-
-FlightPlot is a desktop based tool for log analysis. It can be downloaded from https://github.com/PX4/FlightPlot/releases .
-
-To run flightplot.jar.zip, Java need to be installed in Ubuntu.
-
-Open terminal in the folder where flightplot.jar.zip has been saved.
+## Data Reading
+Run terminal in the folder contains .ulg log file and run:
+```bash
+java -jar flightplot.jar 
 ```
-$java -jar flightplot.jar.zip 
-```
-To open flightplot
+## Data Plotting
 
-Click "Open log" to choos ".ulg" file. All the data can be found in the "Field List"
-
-
-
-## Install Java:
-
-```
-$ sudo apt update
-$ sudo apt install default-jdk
-```
-### Verify the installation:
-```
-$ java -version
-```
-
-## Install pyulog for converting .ulg to csv
-For python3 :
-```
-$ pip3 install pyulog
-```
-
-### Convert .ulg file to .csv
-Open terminal the folder with .ulg file.
-```
-$ ulog2csv .ulg
-```
-
-## Install ROS
-Go to http://wiki.ros.org/melodic/Installation/Ubuntu
-And follow steps.
-
-:::reminder
-For installation, choose Desktop-full install.
+## Following data will be used for analysis
+:::note
+Click field.list to view all data
 :::
 
-## Build Development Environment on Ubuntu
-
-### Steps
-1. Go to https://dev.px4.io/v1.9.0/en/setup/dev_env_linux_ubuntu.html
-
-1. Download 4 scripts ("ubuntu_sim_common_deps.sh","ubuntu_sim.sh","ubuntu_sim_nuttx.sh","ubuntu_sim_ros_melodic.sh")
- 
-
-1. Open a terminal and enter the following command: ($ sudo usermod -a -G dialout $USER)
-
-1. Logout and login again
-
-1. Run all the script in a bash shell
-```
- $ scource__________
- (example: source ubuntu_sim_common_deps.sh)
-```
-All the development tools will be installed automatically.
- 
-## Install Ninjia Build System
- ```
- $ sudo apt-get install ninja-build -y
-```
-
-
-
-
-
-
-
-
-
-
-
-@yongtian
+1. vehicle_local_position_0.(XYZ) >>> vehicle local position(XYZ)
+1. position_setpoint_triplet_0,current.(XYZ) >>> vehicle setpoint position
+1. vehicle_local_position_0.a(XYZ) >>> vehicle current acceleration(XYZ)
+1. position_setpoint_triplet_0,current.a_(XYZ) >>> vehicle setpoint accleration(XYZ0)
+1. vehicle_rates_setpoint_0.(pitch,yaw,row) >>> vehicle angular velocity setting value (pitch,yaw,row)
+1. [EulerFromQuaternion]  >>> vehicle current angular velocity(pitch,yaw,row)
+:::note
+To get this , "vehicle_attitude_0.q[0~3]" need to be selected. Click'add' and add 'Processor'EulerFromQuaternion to these data.
+:::
+:::

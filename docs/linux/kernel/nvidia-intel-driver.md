@@ -3,6 +3,7 @@ hide_title: true
 sidebar_label: Nvidia Intel Graphics
 ---
 # Nvidia Intel Graphics Driver
+### Option 1
 1. go to [Nvidia]( https://www.nvidia.com/object/unix.html ) to download the latest driver in .run format
 2. go to `single-user mode` and uninstall existing nvidia drivers `sudo apt-get purge nvidia-*`
 You may need to perform `apt autoremove` to remove stray nvidia related packages. 
@@ -34,6 +35,16 @@ GRUB_CMDLINE_LINUX=""
 ``` bash
 grep nouveau /var/log/Xorg.0.log
 ```
+
+### Option 2
+ 1. Open Software & Updates
+ 1. Tick first four options
+ ![](./img/swup.png)
+ 1. NVIDIA device drivers can be found in 'Additional Drivers'
+ ![](./img/driver.png)
+ 1. After the drivers have been installed, reboot
+ 
+
 
 ## Install CUDA if necessary
 

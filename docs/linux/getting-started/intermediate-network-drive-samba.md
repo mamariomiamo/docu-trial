@@ -8,6 +8,8 @@ sidebar_label: Intermediate - Samba Network Drive
 You need to create UNIX account (`adduser`), before adding the samba user
 `sudo smbpasswd -a <user>`
 
+Restart the service by `sudo systemctl restart smbd.service`
+
 Sample Samba Setup could be found below
 
 ```bash title="/etc/samba/smb.conf"
