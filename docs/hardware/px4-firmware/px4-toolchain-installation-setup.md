@@ -1,15 +1,17 @@
 ---
 hide_title: true
-sidebar_label: PX4 Toolchian & Setup
+sidebar_label: Toolchain Installation & Setup
 ---
 
-# PX4 Toolchain & Setup
+# Toolchain & Setup
 
 ## Toolchain installation
 
-It is recommended to use Liux machine for PX4 development as it takes **excruciatingly** long time to compile in Windows.
+It is recommended to use Liux machine for PX4 development as it takes :fire:**excruciatingly**:fire: long time to compile in Windows.
 
 If you have Ubuntu 18.04 installed, go ahead to this [link](https://dev.px4.io/master/en/setup/dev_env_linux_ubuntu.html).
+
+> **Note** Instructions below are based on the PX4 firmware master branch. To work with different branches, simply toggle between the branches at the top of the dev guide side bar.
 
 Download the two scripts: "[ubuntu.sh](https://raw.githubusercontent.com/PX4/Firmware/master/Tools/setup/ubuntu.sh)" and "[ubuntu_sim_ros_melodic.sh](https://raw.githubusercontent.com/PX4/Devguide/master/build_scripts/ubuntu_sim_ros_melodic.sh)" to install Gazebo 9, jMAVSim simuilator and NuttX/Pixhawk tools.
 
@@ -23,72 +25,21 @@ chmod +x ubuntu_sim_ros_melodic.sh
 ```
 Reboot the system to complete installation.
 
-To verify succesful toolchain installation, we will try to compile the PX4 firmware for both simulation and fmu-v2.
+## Test run
+
+To verify succesful toolchain installation and setup, we will try to compile the PX4 firmware for both simulation and fmu-v2.
+First, we will download the PX4 firmware:
 ```
 git clone https://github.com/PX4/Firmware.git --recursive
 ```
-
-## FlightPlot
-
-FlightPlot is a desktop based tool for log analysis. It can be downloaded from https://github.com/PX4/FlightPlot/releases .
-
-To run flightplot.jar.zip, Java need to be installed in Ubuntu.
-
-Open terminal in the folder where flightplot.jar.zip has been saved.
+Next, try to compile PX4 firmware and run gazebo simulation, more details on simulation with gazebo [here](https://dev.px4.io/master/en/simulation/gazebo.html).
 ```
-$java -jar flightplot.jar.zip 
+make px4_sitl gazebo
 ```
-To open flightplot
-
-Click "Open log" to choos ".ulg" file. All the data can be found in the "Field List"
-
-
-
-## Install Java:
-
+Then, try to compile PX4 firmware for fmu-v2 target, more details on different targets [here](https://dev.px4.io/master/en/setup/building_px4.html#nuttx).
 ```
-$ sudo apt update
-$ sudo apt install default-jdk
+make px4_fmu-v2
 ```
-### Verify the installation:
-```
-$ java -version
-```
-### 2.1 Build Development Environment on Ubuntu
-### Steps
-1. Go to https://dev.px4.io/v1.9.0/en/setup/dev_env_linux_ubuntu.html
+> **Tip 1:** If there is built-error like [this](https://github.com/PX4/Firmware/issues/13809), follow the guide [here](https://dev.px4.io/master/en/setup/dev_env_linux_centos.html#gcc-toolchain-installation) to check compiler version.
 
-1. Download 4 scripts ("ubuntu_sim_common_deps.sh","ubuntu_sim.sh","ubuntu_sim_nuttx.sh","ubuntu_sim_ros_melodic.sh")
- 
-
-1. Open a terminal and enter the following command: ($ sudo usermod -a -G dialout $USER)
-
-1. Logout and login again
-
-1. Run all the script in a bash shell
-```
- $ scource__________
- (example: source ubuntu_sim_common_deps.sh)
-```
-All the development tools will be installed automatically.
-
-
-
-## Install pyulog for converting .ulg to csv
-For python3 :
-```
-$ pip3 install pyulog
-```
-
-### Convert .ulg file to .csv
-Open terminal the folder with .ulg file.
-```
-$ ulog2csv .ulg
-```
-
-
- 
-## Install Ninjia Build System
- ```
- $ sudo apt-get install ninja-build -y
-```
+> **Tip 2:** If you forget the make command, use ```make list_config_targets``` to remind yourself.
