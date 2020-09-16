@@ -14,9 +14,9 @@ On the sd card that is to be inserted into the pixhawk device:
 Create a new folder named "etc"
 Create a new .txt file named "extras.txt"
 
-> mavlink stream -d /dev/ ttyACM0 -s ATTITUDE -r 100   
-> mavlink stream-d /dev/ ttyACM0 -s ATTITUDE_QUATERNION -r 100  
->  mavlink stream -d /dev/ ttyACM0 -s HIGHRES_IMU -r 100_
+> mavlink stream -d/dev/ttyACM0 -s ATTITUDE -r 100   
+> mavlink stream -d/dev/ttyACM0 -s ATTITUDE_QUATERNION -r 100  
+> mavlink stream -d/dev/ttyACM0 -s HIGHRES_IMU -r 100_
 
 Save the .txt file, insert into pixhawk device, reboot device. PX4 IMU will be changed to 100Hz. Comfirm in mavlink inspector (Qgroundcontrol) or imu/data (RQT).
 
