@@ -61,6 +61,11 @@ module.exports = {
                   label: 'PX4 Firmware',
                   to: 'docs/hardware/px4-firmware/px4-overview'
                 },
+                {
+                  activeBasePath:'docs/hardware/UAV-platform',
+                  label: 'UAV Platform',
+                  to: 'docs/hardware/UAV-Platform/Multirotor-overview'
+                },
               ]
             },
     
