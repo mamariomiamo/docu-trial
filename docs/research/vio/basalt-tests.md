@@ -3,7 +3,178 @@ hide_title: true
 sidebar_label: System Level Tests
 ---
 
+# Running Basalt VIO
+
+Example to run on drone 23:
+```bash
+# terminal 1
+roscore
+
+# terminal 2 - mavros (time sync)
+roslaunch mavros px4.launch gcs_url:=udp://:14540@10.42.0.1/
+# need to wait for the time sync to finish in Mavros
+
+# terminal 3 - camera driver
+roslaunch tiscamera_ros tiscamera_ros_drone23.launch
+# tiscamera_ros should print sync success
+
+# terminal 4 - VIO instance
+roslaunch basalt tis_23.launch
+```
+
+![Running VIO](./img/basalt_vio_running.png)
+
+## Modes to Run In
+
+Refer here for the full list of fusion modes:
+https://docs.px4.io/master/en/advanced_config/tuning_the_ecl_ekf.html#ekf2_extvis
+
+Modes to test and compare with:
+- GPS + EV_VEL + ROTATE_EV (recommended)
+- GPS + EV_POS + ROTATE_EV (not recommened?)
+- EV_POS + EV_VEL + ROTATE_EV
+- EV_POS + ROTATE_EV
+
+## ROS to Mavros to PX4 (Odometry / vehicle_visual_odometry)
+
+The mavros received external vision (VIO) position estimate through either POSE or ODOMETRY messages, done through remapping.
+
+```xml
+<!-- You should only remap either vision_pose or odometry, but not both -->
+
+<!-- /mavros/vision_pose/pose is posestamped, where /mavros/vision_pose/pose is posewithcovariancestamped -->
+<!-- <remap from="/mavros/vision_pose/pose" to="/basalt/pose_enu" /> -->
+
+<remap from="/mavros/odometry/out" to="/basalt/odom_ned" />
+```
+For more documentation please find at https://dev.px4.io/master/en/ros/external_position_estimation.html
+
 # System Level Tests
+
+## Major Improvement over Outdoor Stability
+
+Sep 2020 Update:
+- GPS interference by USB / Fan is huge
+- Short of J120 boards
+
+Potential issues of the current system:
+- Initialisation may fail / jitter a lot, if the drone starts at a very open field with no close features ( < 10m ?)
+- When GPS is used, VIO degraded to relative measurement. It may not correct GPS jumps effectively
+- Possible to explore VIO as velocity measurement, built into ECL EKF onboard PX4
+
+### Fixed Crashing Issues
+
+#### Frontend - Boundary Check Using Actual Camera Model
+
+Instead of rectangular boundary check, use the actual fisheye lens boundary for optical flow tracking checks, as well as keypoint detection:
+
+```cpp title="Example"
+if (!calib.intrinsics[0].inBound(transform.translation()))
+    patch_valid = false;
+```
+
+#### Backend - Triangulation Checks (Numerical)
+
+Ignore points behind the camera:
+```cpp
+if (p0_triangulated[2] < 0.0)
+{
+    if (config.vio_debug)
+        std::cout << "point " << p0_triangulated.transpose() <<" is behind the camera, throw away" << std::endl;
+    continue;
+}
+```
+
+#### Backend - Keyframe Selection Criteria Optimisation (Initialisation)
+
+```cpp
+  // hm: check if keyframe is needed(
+  // hm: criteria 1: landmarks in the database is low (indexed by current key frames), and there are available unconnected ones
+  // hm: criteria 2: only a small ratio of landmarks are observed, time to marginalise old key frames!
+  if ( ( (lmdb.numLandmarks() < 12 && lmdb.numLandmarks() / opt_flow_meas->num_good_ids < 0.4  ) || double(connected0) / (lmdb.numLandmarks() + 1) < config.vio_new_kf_keypoints_thresh)
+        && (frames_after_kf > config.vio_min_frames_after_kf))
+    take_kf = true;
+
+
+  static bool initialise_baseline = false;
+  if (!initialise_baseline){
+    // latest state translation to the first pose position
+
+    try {
+      double moved_dist = (frame_states.at(last_state_t_ns).getState().T_w_i.translation()).norm();
+      if ( moved_dist > config.vio_min_triangulation_dist * 1.1 && frames_after_kf > config.vio_min_frames_after_kf){
+        take_kf = true; // take a keyframe when the time is right after start;
+        initialise_baseline = true;
+      }
+    }catch (const std::out_of_range& e) {
+        std::cout << "Out of Range error at initialise_baseline" << std::endl;
+    }
+    
+
+  }
+```
+
+#### Frontend - Good Features To Use
+
+Define good observation points, as the points tracked at least in one consecutive pair of frames. And only those observations are used for back-end
+
+```cpp
+{
+int good_ids = 0;
+for (auto& obs : transforms->observations){
+    for (auto& kv : obs){
+    // unsigned
+    if (kv.first < pre_last_keypoint_id)
+        good_ids++;
+    }
+}
+
+transforms->num_good_ids = good_ids;
+}
+```
+
+#### Backend - Marginalise Far Frames
+
+Detect distance between any keyframes and the latest keyframes
+
+```cpp
+if (id_to_marg < 0) { 
+
+    int64_t last_kf = *kf_ids.crbegin(); // the last keyframe always has a state
+
+    for (int64_t id : kf_ids) {
+        auto dist = (frame_poses.at(id).getPose().translation() - frame_states.at(last_kf).getState().T_w_i.translation()).norm();
+
+        if (dist > 10){
+        id_to_marg = id;
+        std::cout << "keyframe too far (> 10 m) removing" << std::endl;
+        }
+
+    }
+
+}
+```
+
+#### Detect Speed > 15m/s, and crash automatically
+```cpp
+      if (last_t_ns > 0){
+        auto delta_t = t_ns - last_t_ns;
+        auto delta_t_w_i = T_w_i.translation() - vio_t_w_i.back();
+
+        // hm: greater than 15 m/s
+        if (delta_t_w_i.norm() / delta_t > 15 )
+        {
+          std::cout << "detect speed to fast > 15 m/s" << std::endl;
+          abort();
+        }
+      }else{
+        first_t_ns = t_ns;
+      }
+      last_t_ns = t_ns;
+```
+
+### Video Demos
+<iframe width="560" height="315" src="https://www.youtube.com/embed/sjBY2vqDDo8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
 
 ## Major Improvement over Stability
 

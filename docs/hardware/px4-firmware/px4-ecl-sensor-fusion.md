@@ -1,3 +1,8 @@
+---
+hide_title: true
+sidebar_label: ECL EKF Sensor Fusion
+---
+
 
 
 ## About GPS and External Vision Fusion
