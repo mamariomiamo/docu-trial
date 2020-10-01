@@ -7,11 +7,11 @@ sidebar_label: Log Analysis
 
 FlightPlot is a desktop based tool for log analysis. It can be downloaded from https://github.com/PX4/FlightPlot/releases .
 
-To run flightplot.jar.zip, Java need to be installed in Ubuntu.
+To run flightplot.jar.zip, Java needs to be installed in Ubuntu.
 
 Open terminal in the folder where flightplot.jar.zip has been saved.
 ```
-$java -jar flightplot.jar.zip 
+$ java -jar flightplot.jar.zip 
 ```
 To open flightplot
 
@@ -40,5 +40,5 @@ $ pip3 install pyulog
 ### Convert .ulg file to .csv
 Open terminal the folder with .ulg file.
 ```bash
-$ ulog2csv .ulg
+$ ulog2csv /your/log/name.ulg
 ```

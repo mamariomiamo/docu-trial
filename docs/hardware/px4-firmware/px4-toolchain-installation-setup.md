@@ -7,11 +7,13 @@ sidebar_label: Toolchain Installation & Setup
 
 ## Toolchain installation
 
-It is recommended to use Liux machine for PX4 development as it takes :fire:**excruciatingly**:fire: long time to compile in Windows.
+It is recommended to use Linux machine for PX4 development as it takes :fire:**excruciatingly**:fire: long time to compile in Windows.
 
-If you have Ubuntu 18.04 installed, go ahead to this [link](https://dev.px4.io/master/en/setup/dev_env_linux_ubuntu.html).
+If you have Ubuntu 18.04 installed (recommended), go ahead to this [link](https://dev.px4.io/master/en/setup/dev_env_linux_ubuntu.html).
 
-> **Note** Instructions below are based on the PX4 firmware master branch. To work with different branches, simply toggle between the branches at the top of the dev guide side bar.
+:::note
+Instructions below are based on the PX4 firmware master branch. To work with different branches, simply toggle between the branches at the top of the dev guide side bar.
+:::
 
 Download the two scripts: "[ubuntu.sh](https://raw.githubusercontent.com/PX4/Firmware/master/Tools/setup/ubuntu.sh)" and "[ubuntu_sim_ros_melodic.sh](https://raw.githubusercontent.com/PX4/Devguide/master/build_scripts/ubuntu_sim_ros_melodic.sh)" to install Gazebo 9, jMAVSim simuilator and NuttX/Pixhawk tools.
 
@@ -40,6 +42,8 @@ Then, try to compile PX4 firmware for fmu-v2 target, more details on different t
 ```
 make px4_fmu-v2
 ```
-> **Tip 1:** If there is built-error like [this](https://github.com/PX4/Firmware/issues/13809), follow the guide [here](https://dev.px4.io/master/en/setup/dev_env_linux_centos.html#gcc-toolchain-installation) to check compiler version.
 
-> **Tip 2:** If you forget the make command, use ```make list_config_targets``` to remind yourself.
+:::tip
+1. If there is built-error like [this](https://github.com/PX4/Firmware/issues/13809), follow the guide [here](https://dev.px4.io/master/en/setup/dev_env_linux_centos.html#gcc-toolchain-installation) to check compiler version.
+2. If you forget the make command, use ```make list_config_targets``` to remind yourself.
+:::

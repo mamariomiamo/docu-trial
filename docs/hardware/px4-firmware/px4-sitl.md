@@ -17,6 +17,19 @@ Watch [this](https://www.youtube.com/watch?v=1Bs98kOwuK4) video for some PX4 SIT
 
 ### Multi-vehicle simulation with gazebo
 
+We can start from [here](https://dev.px4.io/master/en/simulation/multi-vehicle-simulation.html).
+
+Explanation by developer Jaeyoung-Lim from Auterion [here](https://404warehouse.net/2020/04/26/simulating-multiple-vehicles-in-px4-sitl-gazebo/).
+
+Possible troubleshooting:
+https://discuss.px4.io/t/px4-multiple-vehicle-simulation/10725/4 (troubleshooting posts with some in-depth discussion near the end)
+
+https://discuss.px4.io/t/multi-uav-simulation-with-using-gazebo-and-ros/15700/4
+
+
+
+
+
 ### Customized Gazebo Models
 
 Here are some useful materials discussing about importing customized Gzebo models into the simulation.
