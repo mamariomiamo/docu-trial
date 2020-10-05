@@ -3,11 +3,54 @@ hide_title: true
 sidebar_label: ECL EKF Sensor Fusion
 ---
 
+## GPS usage in EKF
+
+PX4 Firmware version, 1.10.1
+
+### `Ekf2::Run()` in `modules/ekf2/ekf2_main.cpp`
+In the `Ekf2::Run()` function, the GPS updates are attempted when new `sensor_combined` data is available. If GPS have updates and enabled in EKF fusion, then `blend_gps_data()` is performed, where it should fail because we only have 1 GPS? Then the hardcoded logic is used to set the `_gps_select_index`. Eventually, the selected GPS data, is set to EKF by `setGpsData()`, and also output as logged `ekf_gps_position` uORB topic.
+
+Within `setGpsData()`, there is a logic `collect_gps(const gps_message &gps)`, it has a treatment of GPS relative position initialisation. It supports GPS initialisation, after the filter has been running. WHat it does is to take the current state estimate from the filter, perform `map_projection_reproject` with the negative of the state estimate, so we can obtain the starting position's latitude and longitude, and use that to `map_projection_init_timestamped`. It will return with `_NED_origin_initialised && (gps.fix_type >= 3)`. At last, a sample is prepared, and `_gps_buffer` is updated, stored as NE earth frame position in meters. 
+
+### `Ekf::update()` in `lib/ecl/EKF/control.cpp`
+
+Ekf is a member variable within the EKF2 class, and its member function `update()` is called within `Ekf2::Run()` function, after all the sensor data gathering logic. 
+
+Within the update function, it calls `controlFusionModes()` when there is imu update. It in turn calls `controlGpsFusion()`. `tilt_align` flags signify the convergence of roll and pitch with in +- 3 degree.
+
+If the fusion of GPS yaw is enabled, then after convergence of tilt, the `gps_yaw` flag will be turned on, and all other yaw fusion (EV) would be disabled. It will not be turned off ever again. With the flag on, it will run `fuseGpsAntYaw()`. It is a bit strange that the yaw fusion is never turned of regardless of the subsequent GPS quality. If the GPS fusion starts it should emit:
+
+```cpp
+if (_control_status.flags.gps) {
+	ECL_INFO_TIMESTAMPED("EKF commencing GPS fusion");
+	_time_last_gps = _time_last_imu;
+}
+```
+
+#### Case when GPS fails (but EV valid)
+
+```cpp
+		// Handle the case where we are using GPS and another source of aiding and GPS is failing checks
+		if (_control_status.flags.gps  && gps_checks_failing && (_control_status.flags.opt_flow || _control_status.flags.ev_pos || _control_status.flags.ev_vel)) {
+			_control_status.flags.gps = false;
+			// Reset position state to external vision if we are going to use absolute values
+			if (_control_status.flags.ev_pos && !(_params.fusion_mode & MASK_ROTATE_EV)) {
+				resetPosition();
+			}
+			ECL_WARN_TIMESTAMPED("EKF GPS data quality poor - stopping use");
+		}
+```
+
+#### After Innovation Calculation
+
+controlVelPosFusion();
+
+controlExternalVisionFusion();
 
 
 ## About GPS and External Vision Fusion
 
-GPS sample is in meters relative to home?
+GPS sample is in meters relative to home.
 
 ```cpp title="estimator_interface.cpp"
 		// Only calculate the relative position if the WGS-84 location of the origin is set
@@ -33,7 +76,7 @@ GPS sample is in meters relative to home?
 */
 ```
 
-
+#### External Vision location fusion, when GPS fusion is enabled
 for `_fuse_hpos_as_odom` is enabled if GPS is used
 
 ```cpp
