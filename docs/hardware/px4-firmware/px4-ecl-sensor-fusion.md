@@ -7,6 +7,18 @@ sidebar_label: ECL EKF Sensor Fusion
 
 PX4 Firmware version, 1.10.1
 
+### EKF Status
+
+ekf status, global position valid:
+```cpp Title="ekf_helper.cpp"
+bool Ekf::global_position_is_valid()
+{
+	// return true if the origin is set we are not doing unconstrained free inertial navigation
+	// and have not started using synthetic position observations to constrain drift
+	return (_NED_origin_initialised && !_deadreckon_time_exceeded && !_using_synthetic_position);
+}
+```
+
 ### `Ekf2::Run()` in `modules/ekf2/ekf2_main.cpp`
 In the `Ekf2::Run()` function, the GPS updates are attempted when new `sensor_combined` data is available. If GPS have updates and enabled in EKF fusion, then `blend_gps_data()` is performed, where it should fail because we only have 1 GPS? Then the hardcoded logic is used to set the `_gps_select_index`. Eventually, the selected GPS data, is set to EKF by `setGpsData()`, and also output as logged `ekf_gps_position` uORB topic.
 
