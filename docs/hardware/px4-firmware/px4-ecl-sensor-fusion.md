@@ -3,6 +3,36 @@ hide_title: true
 sidebar_label: ECL EKF Sensor Fusion
 ---
 
+## Coordinate Systems in USE
+
+### Mavros
+Mavros supports the conversion of ROS odometry message to MAVLINK odometry message. The coordinate frames are important here.
+
+The MAVLink odometry message is hardcoded with frame of local NED frame, and body frame of NED as well.
+
+```cpp title="odom.cpp"
+		mavlink::common::msg::ODOMETRY msg {};
+		msg.frame_id = utils::enum_value(MAV_FRAME::LOCAL_FRD);
+		msg.child_frame_id = utils::enum_value(MAV_FRAME::BODY_FRD);
+```
+
+To get to this settings, the mavros actually does tf transform internally. 
+- Firstly it transform the `odom->pose.pose.position` to `odom_ned` frame, from whatever parent frame the odom message is carrying from ROS side.
+- For orientation `odom->pose.pose.orientation`, it uses the child `base_link_frd` frame to do the transform
+- if we set the ROS message properly, we can effectively by pass the two transformation (performing identity transformation)
+
+To take special note, the linear velocity and angular velocity are in local body frame, not local map frame!
+
+### PX4 MAVLink Receiver
+
+The receiver job is simple, it direcly copy the MAVLink odom message position over to the uorb `vehicle_odometry_s` message, assuming local NED frame.
+
+For linear velocity and angular rate, it must be in local body frame NED.
+
+### PX4 EKF Estimator Interface
+
+The reeived `vehicle_odometry_s` uORB message is processed by `setExtVisionData()` function, in which position, orientation and velocity info is being used.
+
 ## GPS usage in EKF
 
 PX4 Firmware version, 1.10.1
