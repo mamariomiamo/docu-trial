@@ -21,26 +21,312 @@ To get to this settings, the mavros actually does tf transform internally.
 - For orientation `odom->pose.pose.orientation`, it uses the child `base_link_frd` frame to do the transform
 - if we set the ROS message properly, we can effectively by pass the two transformation (performing identity transformation)
 
-To take special note, the linear velocity and angular velocity are in local body frame, not local map frame!
+To take special note, the linear velocity and angular velocity are in local body frame (`MAV_FRAME::BODY_FRD`), not local map frame!
 
 ### PX4 MAVLink Receiver
 
-The receiver job is simple, it direcly copy the MAVLink odom message position over to the uorb `vehicle_odometry_s` message, assuming local NED frame.
+The receiver job is simple, it direcly copy the MAVLink odom message position over to the uorb `vehicle_odometry_s` message, assuming local FRD frame. (in function `handle_message_vision_position_estimate()` or `handle_message_odometry()`)
 
-For linear velocity and angular rate, it must be in local body frame NED.
+For **linear velocity** and **angular rate**, it must be in local **body** frame FRD (`vehicle_odometry_s::BODY_FRAME_FRD`).
 
-### PX4 EKF Estimator Interface
+It only supports:
+- `MAV_FRAME_BODY_FRD` for `odom.child_frame_id`, which controls the frame for velocity (direct copy without transformation)
+- `MAV_FRAME_LOCAL_NED` or `MAV_FRAME_LOCAL_FRD` for `odom.frame_id`, which still does direct one-to-one copy for position and quaternion, but encode the uORB frame accordingly:
+  - `odometry.local_frame = vehicle_odometry_s::LOCAL_FRAME_NED`, or
+  - `odometry.local_frame = vehicle_odometry_s::LOCAL_FRAME_FRD`  (**MAVROS default**)
 
-The reeived `vehicle_odometry_s` uORB message is processed by `setExtVisionData()` function, in which position, orientation and velocity info is being used.
+:::note The difference between local frame NED and local frame FRD
+LOCAL_FRAME_NED has attempt to align with true north and east direction, where as LOCAL_FRAME_FRD has arbitary horizontal alignment.
+:::
+
+### PX4 EKF2 External Vision Data Processing
+
+The reeived `vehicle_odometry_s` uORB message is processed in the main `Ekf2::Run()` loop, which is converted to `extVisionSample` datatype:
+```cpp
+struct extVisionSample {
+	Vector3f pos;	///< XYZ position in external vision's local reference frame (m) - Z must be aligned with down axis
+	Vector3f vel;	///< FRD velocity in reference frame defined in vel_frame variable (m/sec) - Z must be aligned with down axis
+	Quatf quat;		///< quaternion defining rotation from body to earth frame
+	Vector3f posVar;	///< XYZ position variances (m**2)
+	Matrix3f velCov;	///< XYZ velocity covariances ((m/sec)**2)
+	float angVar;		///< angular heading variance (rad**2)
+	velocity_frame_t vel_frame = BODY_FRAME_FRD;
+	uint64_t time_us;	///< timestamp of the measurement (uSec)
+};
+```
+
+The velocity frame follows what is in the uORB message, which gives `estimator::BODY_FRAME_FRD` frame. All entries (position, velocity and quaternion) are copied one-to-one in coordinates from uORB message to `extVisionSample`. The message are stored using `setExtVisionData()` function, which in turns stores data to `_ext_vision_buffer`.
+
+:::note
+This is to say, the position and attitude is in local FRD frame, and velocity is in body FRD frame (not local!).
+:::
+
+### `controlExternalVisionFusion()` Logic in `control.cpp`
+
+#### Regarding EV Rotation
+For **every** measurement, if `rotate EV` option is enabled and EV is used, it rotates the EV measurement, aligning the two quaternions! Which generates a rotation matrix `_R_ev_to_ekf`, which express the EV frame in EKF frame, essentially converting coordinates from EV to EKF (local NED).
+
+#### Regarding Position Fusion
+If GPS is used, then all position measurement EV gives, would be used as relative measurement. The logic automatically calculates position changes,
+```cpp
+Vector3f ev_delta_pos = _ev_sample_delayed.pos - _pos_meas_prev;
+ev_delta_pos = _R_ev_to_ekf * ev_delta_pos;
+```
+and rotates this relative position into EKF frame. Think about it, if there is no _R_ev_to_ekf applied, the two coordinate frame will have rotation drift, as the position measurement is originally in `vehicle_odometry_s::LOCAL_FRAME_FRD`, not body frame (it cant be body frame anyway). To make things worse, EV local frame WILL drift, due to is incremental nature, and the drift is NOT observable.
+
+Therefore, rotating the delta position with the current attitude difference between EV and EKF make sense. The delta pose in measured in DRIFTED EV local frame, so to eliminate the drift, we should rotate it to the body frame, hence `_ev_sample_delayed.quat.inversed()`. Thereafter, EKF is expecting the position measurement to be in the local frame, not body frame, hence we need to convert the measurement into a **fake** local measurement, by multiplying the current state rotation, hence `_state.quat_nominal`.
+
+The innovation is calculated as the following:
+```cpp
+// use the change in position since the last measurement
+_ev_pos_innov(0) = _state.pos(0) - _hpos_pred_prev(0) - ev_delta_pos(0);
+_ev_pos_innov(1) = _state.pos(1) - _hpos_pred_prev(1) - ev_delta_pos(1);
+```
+:::tip
+Conclusion, it is safe to feed the EKF with odometry measured in EV local frame, with EV rotation turned on. However, the vision position will only be used as a relative measurement.
+:::
+
+#### Regarding Velocity Fusion
+
+Lets now analyse the case for velocity fusion. It is programmed in function `getVisionVelocityInEkfFrame()`.
+
+There are two cases:
+- (**MAVROS default**) If the velocity is measured in `BODY_FRAME_FRD`, then EV-EKF rotation is not applied, instead it applies
+  ```cpp
+  vel = _R_to_earth * (_ev_sample_delayed.vel - vel_offset_body);
+  ```
+  which is essentially from body frame to EKF local frame.
+- If the velocity is measured in `LOCAL_FRAME_FRD`, then EV-EKF rotation is applied
+  ```cpp
+  vel = _R_ev_to_ekf *_ev_sample_delayed.vel - vel_offset_earth;
+  ```
+
+:::tip
+For velocity fusion, the rotate EV will not make a difference, as Mavros-PX4 interfaces request the velocity to be in body frame in any case.
+:::
 
 ## GPS usage in EKF
 
-PX4 Firmware version, 1.10.1
+PX4 Firmware version, 1.11.1 (Sep 2020)
+
+### Issue 1: GPS Lock Does not Turn Green (Postive Beeping Sequence)
+
+![](./img/gps_height_variantion_meters.png)
+![](./img/gps_xy_variation_1e7meters.png)
+
+
+```cpp title="Relevant logics"
+/**
+* @brief This function initializes the home position an altitude of the vehicle. This happens first time we get a good GPS fix and each
+*		 time the vehicle is armed with a good GPS fix.
+**/
+bool
+Commander::set_home_position()
+{
+	// Need global and local position fix to be able to set home
+	if (status_flags.condition_global_position_valid && status_flags.condition_local_position_valid) {
+
+		const vehicle_global_position_s &gpos = _global_position_sub.get();
+
+		// Ensure that the GPS accuracy is good enough for intializing home
+		if ((gpos.eph <= _param_com_home_h_t.get()) && (gpos.epv <= _param_com_home_v_t.get())) {
+
+			const vehicle_local_position_s &lpos = _local_position_sub.get();
+
+			// Set home position
+			home_position_s home{};
+
+			home.timestamp = hrt_absolute_time();
+
+			home.lat = gpos.lat;
+			home.lon = gpos.lon;
+			home.valid_hpos = true;
+
+			home.alt = gpos.alt;
+			home.valid_alt = true;
+
+			home.x = lpos.x;
+			home.y = lpos.y;
+			home.z = lpos.z;
+
+			home.yaw = lpos.heading;
+			_heading_reset_counter = lpos.heading_reset_counter;
+
+			home.manual_home = false;
+
+			// play tune first time we initialize HOME
+			if (!status_flags.condition_home_position_valid) {
+				tune_home_set(true);
+			}
+
+			// mark home position as set
+			status_flags.condition_home_position_valid = _home_pub.update(home);
+
+			return status_flags.condition_home_position_valid;
+		}
+	}
+
+	return false;
+}
+```
+
+There is a check parameter `CBRK_VELPOSERR`, which runs the following code:
+```cpp
+/* Check estimator status for signs of bad yaw induced post takeoff navigation failure
+* for a short time interval after takeoff. Fixed wing vehicles can recover using GPS heading,
+* but rotary wing vehicles cannot so the position and velocity validity needs to be latched
+* to false after failure to prevent flyaway crashes */
+	if (run_quality_checks && status.vehicle_type == vehicle_status_s::VEHICLE_TYPE_ROTARY_WING) {
+
+		if (status.arming_state == vehicle_status_s::ARMING_STATE_STANDBY) {
+			// reset flags and timer
+			_time_at_takeoff = hrt_absolute_time();
+			_nav_test_failed = false;
+			_nav_test_passed = false;
+
+		} else if (_land_detector.landed) {
+			// record time of takeoff
+			_time_at_takeoff = hrt_absolute_time();
+
+		} else {
+			// if nav status is unconfirmed, confirm yaw angle as passed after 30 seconds or achieving 5 m/s of speed
+			const bool sufficient_time = (hrt_elapsed_time(&_time_at_takeoff) > 30_s);
+			const bool sufficient_speed = (lpos.vx * lpos.vx + lpos.vy * lpos.vy > 25.0f);
+
+			bool innovation_pass = estimator_status.vel_test_ratio < 1.0f && estimator_status.pos_test_ratio < 1.0f;
+
+			if (!_nav_test_failed) {
+				if (!_nav_test_passed) {
+					// pass if sufficient time or speed
+					if (sufficient_time || sufficient_speed) {
+						_nav_test_passed = true;
+					}
+
+					// record the last time the innovation check passed
+					if (innovation_pass) {
+						_time_last_innov_pass = hrt_absolute_time();
+					}
+
+					// if the innovation test has failed continuously, declare the nav as failed
+					if (hrt_elapsed_time(&_time_last_innov_pass) > 1_s) {
+						_nav_test_failed = true;
+						mavlink_log_emergency(&mavlink_log_pub, "Critical navigation failure! Check sensor calibration");
+					}
+				}
+			}
+		}
+	}
+
+/* run global position accuracy checks */
+// Check if quality checking of position accuracy and consistency is to be performed
+if (run_quality_checks) {
+	if (_nav_test_failed) {
+		status_flags.condition_global_position_valid = false;
+		status_flags.condition_local_position_valid = false;
+		status_flags.condition_local_velocity_valid = false;
+
+	} else {
+		if (!_skip_pos_accuracy_check) {
+			// use global position message to determine validity
+			check_posvel_validity(true, gpos.eph, _eph_threshold_adj, gpos.timestamp, &_last_gpos_fail_time_us,
+							&_gpos_probation_time_us, &status_flags.condition_global_position_valid, &_status_changed);
+		}
+
+		// use local position message to determine validity
+		check_posvel_validity(lpos.xy_valid, lpos.eph, _eph_threshold_adj, lpos.timestamp, &_last_lpos_fail_time_us,
+						&_lpos_probation_time_us, &status_flags.condition_local_position_valid, &_status_changed);
+
+		check_posvel_validity(lpos.v_xy_valid, lpos.evh, _param_com_vel_fs_evh.get(), lpos.timestamp, &_last_lvel_fail_time_us,
+						&_lvel_probation_time_us, &status_flags.condition_local_velocity_valid, &_status_changed);
+	}
+}
+```
+
+The following code shows magnatometer must be used for GPS and/or EV navigation
+```cpp
+bool Ekf::shouldInhibitMag() const
+{
+	// If the user has selected auto protection against indoor magnetic field errors, only use the magnetometer
+	// if a yaw angle relative to true North is required for navigation. If no GPS or other earth frame aiding
+	// is available, assume that we are operating indoors and the magnetometer should not be used.
+	// Also inhibit mag fusion when a strong magnetic field interference is detected or the user
+	// has explicitly stopped magnetometer use.
+	const bool user_selected = (_params.mag_fusion_type == MAG_FUSE_TYPE_INDOOR);
+
+	const bool heading_not_required_for_navigation = !_control_status.flags.gps
+							 && !_control_status.flags.ev_pos
+							 && !_control_status.flags.ev_vel;
+
+	return (user_selected && heading_not_required_for_navigation)
+	       || isStrongMagneticDisturbance();
+}
+```
+
+This give three flags `condition_global_position_valid`, `condition_local_position_valid`, `condition_local_velocity_valid`
+
+## EKF Debugging
+
+SDLOG_PROFILE parameter to set
+```cpp title="logged_topics.cpp"
+void LoggedTopics::add_estimator_replay_topics()
+{
+	// for estimator replay (need to be at full rate)
+	add_topic("ekf2_timestamps");
+	add_topic("ekf_gps_position");
+
+	// current EKF2 subscriptions
+	add_topic("airspeed");
+	add_topic("optical_flow");
+	add_topic("sensor_combined");
+	add_topic("sensor_selection");
+	add_topic("vehicle_air_data");
+	add_topic("vehicle_land_detected");
+	add_topic("vehicle_magnetometer");
+	add_topic("vehicle_status");
+	add_topic("vehicle_visual_odometry");
+	add_topic("vehicle_visual_odometry_aligned");
+	add_topic_multi("distance_sensor");
+	add_topic_multi("vehicle_gps_position");
+}
+```
+
+```cpp title="EKF2_MAG_TYPE"
+// Integer definitions for mag_fusion_type
+#define MAG_FUSE_TYPE_AUTO      0	///< The selection of either heading or 3D magnetometer fusion will be automatic
+#define MAG_FUSE_TYPE_HEADING   1	///< Simple yaw angle fusion will always be used. This is less accurate, but less affected by earth field distortions. It should not be used for pitch angles outside the range from -60 to +60 deg
+#define MAG_FUSE_TYPE_3D        2	///< Magnetometer 3-axis fusion will always be used. This is more accurate, but more affected by localised earth field distortions
+#define MAG_FUSE_TYPE_UNUSED    3	///< Not implemented
+#define MAG_FUSE_TYPE_INDOOR    4	///< The same as option 0, but magnetometer or yaw fusion will not be used unless earth frame external aiding (GPS or External Vision) is being used. This prevents inconsistent magnetic fields associated with indoor operation degrading state estimates.
+#define MAG_FUSE_TYPE_NONE	5	///< Do not use magnetometer under any circumstance. Other sources of yaw may be used if selected via the EKF2_AID_MASK parameter.
+
+
+/**
+ * Type of magnetometer fusion
+ *
+ * Integer controlling the type of magnetometer fusion used - magnetic heading or 3-component vector. The fuson of magnetomer data as a three component vector enables vehicle body fixed hard iron errors to be learned, but requires a stable earth field.
+ * If set to 'Automatic' magnetic heading fusion is used when on-ground and 3-axis magnetic field fusion in-flight with fallback to magnetic heading fusion if there is insufficient motion to make yaw or magnetic field states observable.
+ * If set to 'Magnetic heading' magnetic heading fusion is used at all times
+ * If set to '3-axis' 3-axis field fusion is used at all times.
+ * If set to 'VTOL custom' the behaviour is the same as 'Automatic', but if fusing airspeed, magnetometer fusion is only allowed to modify the magnetic field states. This can be used by VTOL platforms with large magnetic field disturbances to prevent incorrect bias states being learned during forward flight operation which can adversely affect estimation accuracy after transition to hovering flight.
+ * If set to 'MC custom' the behaviour is the same as 'Automatic, but if there are no earth frame position or velocity observations being used, the magnetometer will not be used. This enables vehicles to operate with no GPS in environments where the magnetic field cannot be used to provide a heading reference. Prior to flight, the yaw angle is assumed to be constant if movement tests controlled by the EKF2_MOVE_TEST parameter indicate that the vehicle is static. This allows the vehicle to be placed on the ground to learn the yaw gyro bias prior to flight.
+ * If set to 'None' the magnetometer will not be used under any circumstance. If no external source of yaw is available, it is possible to use post-takeoff horizontal movement combined with GPS velocity measurements to align the yaw angle with the timer required (depending on the amount of movement and GPS data quality). Other external sources of yaw may be used if selected via the EKF2_AID_MASK parameter.
+ * @group EKF2
+ * @value 0 Automatic
+ * @value 1 Magnetic heading
+ * @value 2 3-axis
+ * @value 3 VTOL custom
+ * @value 4 MC custom
+ * @value 5 None
+ * @reboot_required true
+ */
+
+```
+
 
 ### EKF Status
 
 ekf status, global position valid:
-```cpp Title="ekf_helper.cpp"
+```cpp title="ekf_helper.cpp"
 bool Ekf::global_position_is_valid()
 {
 	// return true if the origin is set we are not doing unconstrained free inertial navigation
