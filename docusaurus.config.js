@@ -47,9 +47,14 @@ module.exports = {
               position: 'left',
               items: [
                 {
-                  activeBasePath:'docs/hardware/jetson',
+                  activeBasePath:'docs/hardware/jetson-tx2',
                   label: 'Jetson TX2',
-                  to: 'docs/hardware/jetson/flash-existing-image'
+                  to: 'docs/hardware/jetson-tx2/flash-existing-image'
+                },
+                {
+                  activeBasePath:'docs/hardware/jetson-xavier-nx',
+                  label: 'Jetson Xavier NX',
+                  to: 'docs/hardware/jetson-xavier-nx/getting-started'
                 },
                 {
                   activeBasePath:'docs/hardware/cameras',

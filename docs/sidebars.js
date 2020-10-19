@@ -14,28 +14,33 @@ module.exports = {
   // hardware
   tx2Sidebar: {
     'All About Images': [
-    'hardware/jetson/prepare-bsp-rfs',
-    'hardware/jetson/flash-existing-image',
-    'hardware/jetson/backup-procedures',
-    'hardware/jetson/mount-image-as-loopback',
+    'hardware/jetson-tx2/prepare-bsp-rfs',
+    'hardware/jetson-tx2/flash-existing-image',
+    'hardware/jetson-tx2/backup-procedures',
+    'hardware/jetson-tx2/mount-image-as-loopback',
     
     ],
     'Getting Started': [
-    'hardware/jetson/tx2-post-flashing',
-    'hardware/jetson/uart-setup',
-    'hardware/jetson/usb-setup',
-    'hardware/jetson/power-button',
-    'hardware/jetson/external-sd-card',
-    'hardware/jetson/hotspot-setup',
-    'hardware/jetson/network-sharing',
-    'hardware/jetson/misc',
-    'hardware/jetson/fan',
-    'hardware/jetson/performance-monitoring'
+    'hardware/jetson-tx2/tx2-post-flashing',
+    'hardware/jetson-tx2/uart-setup',
+    'hardware/jetson-tx2/usb-setup',
+    'hardware/jetson-tx2/power-button',
+    'hardware/jetson-tx2/external-sd-card',
+    'hardware/jetson-tx2/hotspot-setup',
+    'hardware/jetson-tx2/network-sharing',
+    'hardware/jetson-tx2/misc',
+    'hardware/jetson-tx2/fan',
+    'hardware/jetson-tx2/performance-monitoring'
     ],
     'Software Packages': [
-    'hardware/jetson/pytorch-install',
-    'hardware/jetson/vscode-install'
+    'hardware/jetson-tx2/pytorch-install',
+    'hardware/jetson-tx2/vscode-install'
     ]
+  },
+  xavierNxSidebar:{
+    'Getting Started': [
+        'hardware/jetson-xavier-nx/getting-started'
+    ],
   },
   camerasSidebar: {
       'USB Cameras': [

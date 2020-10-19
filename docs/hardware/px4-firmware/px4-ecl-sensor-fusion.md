@@ -1,11 +1,14 @@
 ---
 hide_title: true
-sidebar_label: ECL EKF Sensor Fusion
+sidebar_label: ECL EKF Sensor Fusion (GPS)
 ---
 
-## Coordinate Systems in USE
+## Coordinate Systems in Use for Fusion
 
-### Mavros
+Conclusions:
+1. with velocity fusion, the mavros messages about velocity should be in body frame
+
+### Mavros (ROS Message --> MAVLink)
 Mavros supports the conversion of ROS odometry message to MAVLINK odometry message. The coordinate frames are important here.
 
 The MAVLink odometry message is hardcoded with frame of local NED frame, and body frame of NED as well.
@@ -23,7 +26,7 @@ To get to this settings, the mavros actually does tf transform internally.
 
 To take special note, the linear velocity and angular velocity are in local body frame (`MAV_FRAME::BODY_FRD`), not local map frame!
 
-### PX4 MAVLink Receiver
+### PX4 MAVLink Receiver (MAVLink --> uORB)
 
 The receiver job is simple, it direcly copy the MAVLink odom message position over to the uorb `vehicle_odometry_s` message, assuming local FRD frame. (in function `handle_message_vision_position_estimate()` or `handle_message_odometry()`)
 
@@ -39,7 +42,7 @@ It only supports:
 LOCAL_FRAME_NED has attempt to align with true north and east direction, where as LOCAL_FRAME_FRD has arbitary horizontal alignment.
 :::
 
-### PX4 EKF2 External Vision Data Processing
+### PX4 EKF2 External Vision Data Processing (uORB --> EKF Samples)
 
 The reeived `vehicle_odometry_s` uORB message is processed in the main `Ekf2::Run()` loop, which is converted to `extVisionSample` datatype:
 ```cpp
@@ -109,11 +112,12 @@ For velocity fusion, the rotate EV will not make a difference, as Mavros-PX4 int
 
 PX4 Firmware version, 1.11.1 (Sep 2020)
 
-### Issue 1: GPS Lock Does not Turn Green (Postive Beeping Sequence)
+### Updates 10 Oct (Solve Disappearing Local Position Estimate):
 
-![](./img/gps_height_variantion_meters.png)
-![](./img/gps_xy_variation_1e7meters.png)
 
+#### Issue 1: GPS Lock Does not Turn Green (Postive Beeping Sequence)
+
+Green light inditates home position set
 
 ```cpp title="Relevant logics"
 /**
@@ -169,6 +173,23 @@ Commander::set_home_position()
 	return false;
 }
 ```
+
+**Root Causes:**
+- Buggy / incompatible GPS module, which take around a minute to successfully load the device driver after boot. It can be proved by GPS data is only logged after a minute or so, upon boot.
+- Magnetometer ID 0 and 1 might have been mixed up. Currently 1 is external, and 0 is internal which is now disabled. It appears that bad compass health will also prevent green light
+- EKF bug in older 1.10.1 (EV Rotation initialisation)
+- It appears to be that sometime the system will determin XY position drift too much, if we move the drone alot. The vertical position check seems to be fine.
+- Another note, the EKF internal GPS valid check is DIFFERENT from the green light checks!
+- The green light checks takes around 10 seconds
+
+**After Fixes:**
+- Green light shows up around `10-15 seconds`
+- Local position estimate is always valid
+- Next to test: without the shielding box, will GPS still turn green consistently?
+- EKF Tuning (Yaw fusion problems?)
+
+![](./img/ekf-drift-against-gps.png)
+--------
 
 There is a check parameter `CBRK_VELPOSERR`, which runs the following code:
 ```cpp
