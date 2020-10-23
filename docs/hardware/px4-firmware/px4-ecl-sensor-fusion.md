@@ -189,6 +189,38 @@ Commander::set_home_position()
 - EKF Tuning (Yaw fusion problems?)
 
 ![](./img/ekf-drift-against-gps.png)
+
+
+```cpp
+uint16 gps_check_fail_flags     # Bitmask to indicate status of GPS checks - see definition below
+# bits are true when corresponding test has failed
+uint8 GPS_CHECK_FAIL_GPS_FIX = 0		# 0 : insufficient fix type (no 3D solution)
+uint8 GPS_CHECK_FAIL_MIN_SAT_COUNT = 1		# 1 : minimum required sat count fail
+uint8 GPS_CHECK_FAIL_MIN_PDOP = 2		# 2 : minimum required PDOP fail
+uint8 GPS_CHECK_FAIL_MAX_HORZ_ERR = 3		# 3 : maximum allowed horizontal position error fail
+uint8 GPS_CHECK_FAIL_MAX_VERT_ERR = 4		# 4 : maximum allowed vertical position error fail
+uint8 GPS_CHECK_FAIL_MAX_SPD_ERR = 5		# 5 : maximum allowed speed error fail
+uint8 GPS_CHECK_FAIL_MAX_HORZ_DRIFT = 6		# 6 : maximum allowed horizontal position drift fail - requires stationary vehicle
+uint8 GPS_CHECK_FAIL_MAX_VERT_DRIFT = 7		# 7 : maximum allowed vertical position drift fail - requires stationary vehicle
+uint8 GPS_CHECK_FAIL_MAX_HORZ_SPD_ERR = 8	# 8 : maximum allowed horizontal speed fail - requires stationary vehicle
+uint8 GPS_CHECK_FAIL_MAX_VERT_SPD_ERR = 9	# 9 : maximum allowed vertical velocity discrepancy fail
+```
+
+ERROR CODE = 232 which means GPS_CHECK_FAIL_MAX_HORZ_ERR, GPS_CHECK_FAIL_MAX_SPD_ERR, GPS_CHECK_FAIL_MAX_HORZ_DRIFT, GPS_CHECK_FAIL_MAX_VERT_DRIFT
+
+TODO check param COM_ARM_WO_GPS
+```cpp
+(ParamBool<px4::params::COM_ARM_WO_GPS>) _param_arm_without_gps,
+```
+
+```cpp
+// get GPS check status
+void Ekf::get_gps_check_status(uint16_t *val)
+{
+	*val = _gps_check_fail_status.value;
+}
+```
+
 --------
 
 There is a check parameter `CBRK_VELPOSERR`, which runs the following code:
