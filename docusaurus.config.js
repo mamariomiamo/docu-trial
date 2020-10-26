@@ -177,6 +177,11 @@ module.exports = {
                   label: 'VIO',
                   to: 'docs/research/vio/basalt-overview'
                 },
+                {
+                  activeBasePath:'docs/research/edt',
+                  label: 'EDT',
+                  to: 'docs/research/edt/edt-overview'
+                },
               ]
             },
 

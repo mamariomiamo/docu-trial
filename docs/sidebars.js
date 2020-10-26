@@ -39,7 +39,8 @@ module.exports = {
   },
   xavierNxSidebar:{
     'Getting Started': [
-        'hardware/jetson-xavier-nx/getting-started'
+        'hardware/jetson-xavier-nx/getting-started',
+        'hardware/jetson-xavier-nx/OpenCV'
     ],
   },
   camerasSidebar: {
@@ -142,6 +143,11 @@ module.exports = {
       'research/vio/basalt-backend',
       'research/vio/basalt-frontend',
       'research/vio/basalt-tests',
+      ],
+      'EDT': [
+      'research/edt/edt-overview',
+      'research/edt/MapUpdater',
+      'research/edt/stereo',
       ],
   },
 

@@ -2,13 +2,16 @@
 hide_title: true
 sidebar_label: ECL EKF Sensor Fusion (GPS)
 ---
+[TOC]
 
 ## Coordinate Systems in Use for Fusion
 
 Conclusions:
 1. with velocity fusion, the mavros messages about velocity should be in body frame
 
-### Mavros (ROS Message --> MAVLink)
+### Mavros Conversion
+**(ROS Message --> MAVLink)**
+
 Mavros supports the conversion of ROS odometry message to MAVLINK odometry message. The coordinate frames are important here.
 
 The MAVLink odometry message is hardcoded with frame of local NED frame, and body frame of NED as well.
@@ -26,7 +29,8 @@ To get to this settings, the mavros actually does tf transform internally.
 
 To take special note, the linear velocity and angular velocity are in local body frame (`MAV_FRAME::BODY_FRD`), not local map frame!
 
-### PX4 MAVLink Receiver (MAVLink --> uORB)
+### PX4 MAVLink Receiver 
+**(MAVLink --> uORB)**
 
 The receiver job is simple, it direcly copy the MAVLink odom message position over to the uorb `vehicle_odometry_s` message, assuming local FRD frame. (in function `handle_message_vision_position_estimate()` or `handle_message_odometry()`)
 
@@ -42,7 +46,8 @@ It only supports:
 LOCAL_FRAME_NED has attempt to align with true north and east direction, where as LOCAL_FRAME_FRD has arbitary horizontal alignment.
 :::
 
-### PX4 EKF2 External Vision Data Processing (uORB --> EKF Samples)
+### PX4 EKF2 External Vision Data Processing 
+**(uORB --> EKF Samples)**
 
 The reeived `vehicle_odometry_s` uORB message is processed in the main `Ekf2::Run()` loop, which is converted to `extVisionSample` datatype:
 ```cpp
@@ -64,7 +69,8 @@ The velocity frame follows what is in the uORB message, which gives `estimator::
 This is to say, the position and attitude is in local FRD frame, and velocity is in body FRD frame (not local!).
 :::
 
-### `controlExternalVisionFusion()` Logic in `control.cpp`
+### Position / Velocity Fusion Logics
+`controlExternalVisionFusion()` Logic in `control.cpp`
 
 #### Regarding EV Rotation
 For **every** measurement, if `rotate EV` option is enabled and EV is used, it rotates the EV measurement, aligning the two quaternions! Which generates a rotation matrix `_R_ev_to_ekf`, which express the EV frame in EKF frame, essentially converting coordinates from EV to EKF (local NED).
@@ -108,11 +114,11 @@ There are two cases:
 For velocity fusion, the rotate EV will not make a difference, as Mavros-PX4 interfaces request the velocity to be in body frame in any case.
 :::
 
-## GPS usage in EKF
+## GPS Usage in EKF
 
 PX4 Firmware version, 1.11.1 (Sep 2020)
 
-### Updates 10 Oct (Solve Disappearing Local Position Estimate):
+### 10 Oct 2020 (Local Position Estimate & Green Light):
 
 
 #### Issue 1: GPS Lock Does not Turn Green (Postive Beeping Sequence)
@@ -190,6 +196,9 @@ Commander::set_home_position()
 
 ![](./img/ekf-drift-against-gps.png)
 
+#### If GPS Still Not Turning Green
+
+Check logs for the following values:
 
 ```cpp
 uint16 gps_check_fail_flags     # Bitmask to indicate status of GPS checks - see definition below
@@ -206,9 +215,14 @@ uint8 GPS_CHECK_FAIL_MAX_HORZ_SPD_ERR = 8	# 8 : maximum allowed horizontal speed
 uint8 GPS_CHECK_FAIL_MAX_VERT_SPD_ERR = 9	# 9 : maximum allowed vertical velocity discrepancy fail
 ```
 
-ERROR CODE = 232 which means GPS_CHECK_FAIL_MAX_HORZ_ERR, GPS_CHECK_FAIL_MAX_SPD_ERR, GPS_CHECK_FAIL_MAX_HORZ_DRIFT, GPS_CHECK_FAIL_MAX_VERT_DRIFT
+One possibility is that **ERROR CODE = 232** which means 
+- GPS_CHECK_FAIL_MAX_HORZ_ERR, 
+- GPS_CHECK_FAIL_MAX_SPD_ERR, 
+- GPS_CHECK_FAIL_MAX_HORZ_DRIFT, 
+- GPS_CHECK_FAIL_MAX_VERT_DRIFT
 
-TODO check param COM_ARM_WO_GPS
+:::tip
+To inspect GPS check failures on the fly, set the parameter COM_ARM_WO_GPS to false. This will enforce checking GPS when arming
 ```cpp
 (ParamBool<px4::params::COM_ARM_WO_GPS>) _param_arm_without_gps,
 ```
@@ -220,6 +234,23 @@ void Ekf::get_gps_check_status(uint16_t *val)
 	*val = _gps_check_fail_status.value;
 }
 ```
+:::
+
+#### 26 Oct 2020 (Successful Fusion)
+
+Issues:
+- Still encounter difficulties in getting GPS green light
+  - Investigation shows gps_check_fail_flags code = 232, which includes position drift threshold (`EKF2_REQ_HDRIFT`) of 0.1m/s
+  - Calibration of / changing the active magnetometer does not help
+
+However, this time, after successful locking of GPS, the performance seems reasonable:
+- Fusion Mode in use: EKF2_AID_MASK = 449 (use GPS,  rotate external vision,  **GPS yaw fusion**, vision velocity fusion)
+- Previously Yaw fusion of GPS is not enabled, so purely magnetometer
+
+![](./img/ekf-fusion-against-gps.png)
+[Flight Log (includes parameter lists)](./logs/08_25_12.ulg)
+
+This is tested with the latest VIO code, which fixes optimisation bugs and KF creation logics (more stable and robust)
 
 --------
 

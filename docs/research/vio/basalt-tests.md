@@ -51,6 +51,15 @@ For more documentation please find at https://dev.px4.io/master/en/ros/external_
 
 # System Level Tests
 
+## 26 Oct 2020 Major Algorithmic Fixes
+
+Bug Fixes:
+- Fix bugs in LM optimisation steps, for convergence check and rollback step
+- Fix a exception error in keyframe marginalisation logics (indexing non-existing frame / pose entries)
+
+Improvements:
+- Improve KF creation logics, add throttling to prevent keep creating KF under low feature environments
+
 ## Major Improvement over Outdoor Stability
 
 Sep 2020 Update:
