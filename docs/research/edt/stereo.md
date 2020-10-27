@@ -20,10 +20,9 @@ in stereo.cpp, implement a class `StereoUpdater` with param
 allocate, free, reallocate memory for depth and confidence on device, `_D_depth`, `_D_confi_map`
 
 
-implement a function `makeStereoPt`
+implement a function `makeStereoPt`: (1) get the current camera pose (call `updateProjection(trans);` in MapUpdater.cpp); (2)
 ``` cpp
-    // Get the current camera pose
-    updateProjection(trans);
+    
 
     // Copty the depthmap, etc into the device
     topic2Dmem(depthPoint,confidence_ptr);
