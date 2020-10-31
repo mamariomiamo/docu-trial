@@ -564,3 +564,102 @@ GPS position and velocity fusion is lumped together
 			_hvelInnovGate = _vvelInnovGate = fmaxf(_params.gps_vel_innov_gate, 1.0f);
 		}
 ```
+
+### 29 Oct 2020 (Experiment of GPS Green light issue)
+
+Firstly, to make sure the GPS module used on the drone can work properly. An indoor test has been conducted.
+
+Test Results:
+
+![](./img/IDGL.png)
+
+The experiment results show:
+
+1. GPS home position can be set successfully with these EKF2 settings.
+2. In the indoor environment with GPS relay, GPS signal is stable and strong.
+3. GPS module works well indoors
+
+Then the drone platform was tested outdoor.
+
+Test Results:
+
+![](./img/ODGl.png)
+
+According to the results:
+
+1. GPS Green Light is not depends on the EKF2 settings
+2. The firmware keeps checking GPS status, it will turn on the green light until the GPS status stabilizes for a while
+
+**Next step is to solve the errors shown in the test results:**
+
+When the green light does not turn on, we can look at the flight log to see the exact problems the drone is facing.
+
+**estimator_status_0.gps_check_fail_flags** is an important indicator to show the error. 
+![](./img/gpsflag.png)
+
+From the graph, we can see the value changed to 256 at around 14.2s ~ 14.4s.
+
+Error Code = 256 indicates 9th bit of gps_check_fail_flag is 'True'. 
+
+Which also means GPS_CHECK_FAIL_MAX_HORZ_SPD_ERR = 1
+
+So, we need to check GPS horizontal speed to see if there is something wrong with it.
+
+**ekd_gps_drift_0.hspd** is the parameter to check GPS horizontal speed.
+![](./img/hspd.png)
+
+The graph shows gps_drift horizontal speed value. 
+
+Let's zoom it to see what happened between 14s ~ 15s
+![](./img/hspzm.png)
+
+Based on the zoomed graph, the speed exceeded 0.1m/s at around 14.2s
+
+This verifies that the indicator is correct. 
+
+#### Conclusion and solution
+
+According to the experiment and verification by using Fligh log, the default setting for gps horizontal speed check(0.1m/s) is too strict for outdoor testing. To solve this problem, the value can be increased to **0.5m/s**. This value is set based on the experience from previous experiments.
+
+The figure below shows a successful experiment after adjusting the GPS parameters.
+![](./img/2910test.png)
+
+
+### GPS Test without shielding box
+
+![](./img/rstvitest.png)
+
+The graph above shows the roadmap for GPS test without shielding box. The data shown below can be found from this [Flight Log](./logs/08_25_12.ulg)
+
+The aim of this test is to check whether the vision system will affect GPS to start fusion.
+
+![](./img/rstvi.png)
+
+According to **estimator_status_0.gps_check_fail_flags**, the gps green light could not turn on at the begining. Then we swtich off the vision system at around 220, the value drop to 0. After about 10 seconds, **vhicle_local_position_0.xy_global** changed from 0 to 1. This indicates the green light turned on. After a while, the vision system has been restarted manually. 
+
+**In conclusion, the gps will be affected with out shielding TX2.**
+
+#### Other findings
+
+From the Roadmap graph, we can see there is a drift in estimated path. And from the vodometry velocity log, there is also a drift at around 5.30
+
+![](./img/viodemvel.png)
+
+We can also find the log message of this problem at 5.27.
+![](./img/rstvilogmsg.png)
+
+This shows that when vision signal is weak or unavailable, EKF2 will use GPS signal instead. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
