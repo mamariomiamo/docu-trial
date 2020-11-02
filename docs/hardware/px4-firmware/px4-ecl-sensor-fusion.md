@@ -629,7 +629,7 @@ The figure below shows a successful experiment after adjusting the GPS parameter
 
 ![](./img/rstvitest.png)
 
-The graph above shows the roadmap for GPS test without shielding box. The data shown below can be found from this [Flight Log](./logs/08_25_12.ulg)
+The graph above shows the roadmap for GPS test without shielding box. The data shown below can be found from this [Flight Log](./logs/12_40_29.ulg)
 
 The aim of this test is to check whether the vision system will affect GPS to start fusion.
 
@@ -641,7 +641,7 @@ According to **estimator_status_0.gps_check_fail_flags**, the gps green light co
 
 #### Other findings
 
-From the Roadmap graph, we can see there is a drift in estimated path. And from the vodometry velocity log, there is also a drift at around 5.30
+From the Roadmap graph, we can see there is a drift in estimated path. And from the odometry velocity log, there is also a drift at around 5.30
 
 ![](./img/viodemvel.png)
 
