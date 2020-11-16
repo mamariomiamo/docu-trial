@@ -650,7 +650,10 @@ We can also find the log message of this problem at 5.27.
 
 This shows that when vision signal is weak or unavailable, EKF2 will use GPS signal instead. 
 
-
+### Pure GPS-base Navigation Log (16 Nov 2020)
+![](./img/pure-gps-fusion.png)
+[Flight Log](./logs/07_47_15.ulg)
+[Visualisation](https://review.px4.io/plot_app?log=a8854114-b734-44e8-a065-5d1e57c354e9)
 
 
 
