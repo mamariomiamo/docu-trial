@@ -2,7 +2,6 @@
 hide_title: true
 sidebar_label: ECL EKF Sensor Fusion (GPS)
 ---
-[TOC]
 
 ## Coordinate Systems in Use for Fusion
 

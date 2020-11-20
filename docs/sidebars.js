@@ -60,6 +60,7 @@ module.exports = {
         'hardware/px4-firmware/time-synchronisation',
         'hardware/px4-firmware/px4-camera-trigger',
         'hardware/px4-firmware/px4-ecl-sensor-fusion',
+        'hardware/px4-firmware/px4-ecl-state-reset',
       ]
   },
   UAVplatformSidebar: {
@@ -153,6 +154,9 @@ module.exports = {
 
   // systems
   systemsSidebar: {
+      'General': [
+        'systems/ros-coordinate-systems',
+      ],
       'DDrone V2': [
           'systems/ddrone_v2/ddrone',
           'systems/ddrone_v2/getting-started',
