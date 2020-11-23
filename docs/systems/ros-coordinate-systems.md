@@ -28,7 +28,7 @@ Rule of thumb: sensor data should be in NED frame (depth, VIO), global position 
 ### From Mavros to ROS (Planning)
 | Frame ID        | Coordinate Frame | Remark             | Example                                                     |
 | --------------- | ---------------- | ------------------ | ----------------------------------------------------------- |
-| `map`           | ENU              | True North Aligned |                                                             |
+| `map`           | ENU              | True North Aligned | `/mavros/local_position/pose` (configurable in launch file) |
 | `map_ned`       | NED              | By Mavros          |                                                             |
 | `base_link`     | local **ENU**    | INCONSISTENT       | `/mavros/local_position/odom`, and static tf sent by mavros |
 | `base_link_frd` | local NED        | By Mavros          | Should use this as the pointcloud measurement frame         |
@@ -42,11 +42,11 @@ Rule of thumb: sensor data should be in NED frame (depth, VIO), global position 
 It appears that although ROS recommand NWU as the convention for local frame, but `base_link` in mavros uses ENU.
 
 ### From Mavros to ROS (VIO)
-| Frame ID    | Coordinate Frame | Remark | Example                                                      |
-| ----------- | ---------------- | ------ | ------------------------------------------------------------ |
-| `base_link` | ENU              |        | `/mavros/imu/data/orientation`                               |
-| `base_link` | local NWU        |        | `/mavros/imu/data/angular_velocity`, `/mavros/imu/data/linear_acceleration` |
-| `base_link` | local **NWU**        |  INCONSISTENT      | `/mavros/imu/data_raw/*`                                     |
+| Frame ID    | Coordinate Frame | Remark       | Example                                                                     |
+| ----------- | ---------------- | ------------ | --------------------------------------------------------------------------- |
+| `base_link` | ENU              |              | `/mavros/imu/data/orientation`                                              |
+| `base_link` | local NWU        |              | `/mavros/imu/data/angular_velocity`, `/mavros/imu/data/linear_acceleration` |
+| `base_link` | local **NWU**    | INCONSISTENT | `/mavros/imu/data_raw/*`                                                    |
 
 ### From ROS to Mavros (VIO)
 | Frame ID    | Coordinate Frame | Remark             | Example                                           |

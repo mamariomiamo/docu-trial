@@ -54,3 +54,15 @@ Publish the distance map
         pub_map.publish (cost_map_msg);
 ```
 
+### ROS main function （edt_node_dsstereo.cpp）
+
+#### Difference with edt_node_laser_realdrone.cpp
+
+set params instead of hard coding, such as 
+the physical size of a grid in meter, `gridSize`, 
+how many grids in the map, `map_x`, `map_y`, `map_z`
+how many grids will be updated in each step, `update_x`, `update_y`, `update_z`
+fly height of UAV, `FLYHEIGHT`
+height range of the map, `HEIGHT_EXPANSION`
+whether there's a confidence map together with depth map, `use_confidence`
+the params used in map update, `d_min`, `d_max`, `d_thre`

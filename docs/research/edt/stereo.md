@@ -99,3 +99,7 @@ grid map coordinate to global position
 
 `__device__ __forceinline__ DevGeo::pos coord2pos(const DevGeo::coord & c,const DevGeo::pos &origin, const float &gridstep)`
 
+# dsstereo_kernel.cu
+difference with `stereo_kernel.cu`
+in the function `global2project`, the projection of 3D point to image pixel using the double sphere fisheye camera model; add params, `d_min`, `d_max`, `d_thre`, `sweep_mode`
+
