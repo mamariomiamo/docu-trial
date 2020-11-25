@@ -60,6 +60,7 @@ module.exports = {
         'hardware/px4-firmware/time-synchronisation',
         'hardware/px4-firmware/px4-camera-trigger',
         'hardware/px4-firmware/px4-ecl-sensor-fusion',
+        'hardware/px4-firmware/px4-ecl-yaw-fusion',
         'hardware/px4-firmware/px4-ecl-state-reset',
       ]
   },

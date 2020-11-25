@@ -654,8 +654,33 @@ This shows that when vision signal is weak or unavailable, EKF2 will use GPS sig
 [Flight Log](./logs/07_47_15.ulg)
 [Visualisation](https://review.px4.io/plot_app?log=a8854114-b734-44e8-a065-5d1e57c354e9)
 
+### 25 Nov 2020 (Settings Verification Test)
 
+Some key settings of the drone:
+1. TX2 and wires are not covered by shelter
+2. Firmware: PX4 fmu-v3_default
+3. VIO & GPS fusion
 
+Test Result:
+![](./img/1125gps.png)
+![](./img/1125fusion.png)
+![](./img/1125logmsg.png)
+The data log shown above can be found from this [Flight Log](./logs/05_24_56.ulg)
+
+Observation:
+1. Without shielding box, GPS module has a bad performance.
+2. Yaw fusion is not accurate because of magnetometer.
+3. According to log file, GPS signal can be received at 5Hz continously.
+
+Next step:
+3 tests with same route will be conducted.
+1. Stop the vision program, only use GPS fusion
+2. Put shielding box on the drone. 
+3. Turn off GPS from fusion.
+
+From test 1 and test(25/11), we will see how much influence that vision progam can make to GPS module. 
+Test 2 will show the performance of shielding box.
+Test 3 will verify the accuracy of the vision program.
 
 
 
