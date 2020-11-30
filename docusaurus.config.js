@@ -87,19 +87,19 @@ module.exports = {
                   to: 'docs/systems/ros-coordinate-systems'
                 },
                 {
-                  // activeBasePath:'docs/systems/ddrone_v2',
-                  label: 'Ddrone V2',
-                  to: 'docs/systems/ddrone_v2/ddrone'
-                },
-                {
                   // activeBasePath:'docs/systems/',
                   label: 'Simulations',
-                  to: 'docs/systems/unity-SITL'
+                  to: 'docs/systems/unity-simulator'
                 },
                 {
                   // activeBasePath:'docs/systems/',
                   label: 'Vicon',
                   to: 'docs/systems/vicon'
+                },
+                {
+                  // activeBasePath:'docs/systems/ddrone_v2',
+                  label: 'Past Platforms : ddrone v2',
+                  to: 'docs/systems/ddrone_v2/ddrone'
                 },
               ]
             },

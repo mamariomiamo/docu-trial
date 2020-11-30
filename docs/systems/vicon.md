@@ -1,4 +1,5 @@
 ---
 hide_title: true
-sidebar_label: Vicon
+sidebar_label: Vicon Setup
 ---
+

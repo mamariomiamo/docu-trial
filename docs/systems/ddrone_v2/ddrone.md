@@ -1,6 +1,6 @@
 ---
 hide_title: true
-sidebar_label: Ddrone Project
+sidebar_label: ddrone Project
 ---
 
 # Welcome to Ddrone Page

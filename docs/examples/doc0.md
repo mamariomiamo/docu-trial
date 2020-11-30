@@ -84,12 +84,12 @@ The file `./docs/sidebars.js` is organised in blocks like this:
 ``` js
     // systems
     systemsSidebar: {
-        'DDrone V2': [
+        'Past Platforms : ddrone v2': [
             'systems/ddrone_v2/ddrone',
         ],
         'Simulations': [
-            'systems/unity-SITL',
-            'systems/unity-HITL',
+            'systems/simulation/unity-SITL',
+            'systems/simulation/unity-HITL',
         ],
         'Vicon': [
             'systems/vicon',
@@ -119,21 +119,23 @@ Each item can be nested, an example would be:
         label: 'Systems',
         position: 'left',
         items: [
-        {
-            // activeBasePath:'docs/systems/ddrone_v2',
-            label: 'Ddrone V2',
-            to: 'docs/systems/ddrone_v2/ddrone'
-        },
+        
         {
             // activeBasePath:'docs/systems/',
             label: 'Simulations',
-            to: 'docs/systems/unity-SITL'
+            to: 'docs/systems/simulation/unity-SITL'
         },
         {
             // activeBasePath:'docs/systems/',
             label: 'Vicon',
             to: 'docs/systems/vicon'
         },
+        {
+            // activeBasePath:'docs/systems/ddrone_v2',
+            label: 'Past Platforms : ddrone v2',
+            to: 'docs/systems/ddrone_v2/ddrone'
+        },
+        
         ]
     },
 ```

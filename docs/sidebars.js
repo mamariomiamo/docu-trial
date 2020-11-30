@@ -59,6 +59,7 @@ module.exports = {
         'hardware/px4-firmware/mavlink-imu',
         'hardware/px4-firmware/time-synchronisation',
         'hardware/px4-firmware/px4-camera-trigger',
+        'hardware/px4-firmware/px4-ecl-initialisation',
         'hardware/px4-firmware/px4-ecl-sensor-fusion',
         'hardware/px4-firmware/px4-ecl-yaw-fusion',
         'hardware/px4-firmware/px4-ecl-state-reset',
@@ -158,23 +159,25 @@ module.exports = {
       'General': [
         'systems/ros-coordinate-systems',
       ],
-      'DDrone V2': [
-          'systems/ddrone_v2/ddrone',
-          'systems/ddrone_v2/getting-started',
-          'systems/ddrone_v2/VIO',
-          'systems/ddrone_v2/motion-planning',
-          'systems/ddrone_v2/tracking-and-detection',
-          'systems/ddrone_v2/simulator',
-          'systems/ddrone_v2/web-ui',
-      ],
       'Simulations': [
+          'systems/unity-simulator',
+          'systems/unity-setup',
+          'systems/unity-buildyourown',
           'systems/unity-SITL',
           'systems/unity-HITL',
-          'systems/unity-simulator',
       ],
       'Vicon': [
           'systems/vicon',
       ],
+      'Past Platforms : ddrone v2': [
+        'systems/ddrone_v2/ddrone',
+        'systems/ddrone_v2/getting-started',
+        'systems/ddrone_v2/VIO',
+        'systems/ddrone_v2/motion-planning',
+        'systems/ddrone_v2/tracking-and-detection',
+        'systems/ddrone_v2/simulator',
+        'systems/ddrone_v2/web-ui',
+    ],
   },
 
 };
