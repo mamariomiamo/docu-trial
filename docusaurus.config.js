@@ -41,7 +41,7 @@ module.exports = {
     
             // Hardware
               {
-              to: 'docs/hardware/',
+              to: 'docs/hardware/jetson-tx2',
               activeBasePath: 'docs/hardware',
               label: 'Hardware',
               position: 'left',

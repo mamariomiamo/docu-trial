@@ -34,7 +34,6 @@ For build your own unity scene and guide to modify please refer to **(Build-your
 - `"\\deptnas.nus.edu.sg\TSL\Research\Centre Flight Science\Intelligent Unmanned Systems\Research Data Backup\Users\YONG Wen Huei Wayne\Unity Simulator\Leviosa_5_deg_down_build-2020-mm-dd"`
 5. For 10 degree downward tilt Lidar, use  
 - `"\\deptnas.nus.edu.sg\TSL\Research\Centre Flight Science\Intelligent Unmanned Systems\Research Data Backup\Users\YONG Wen Huei Wayne\Unity Simulator\Leviosa_10_deg_down_build-2020-mm-dd"`
-For build your own unity scene and guide to modify please refer to **(Build-your-own)**
 
 ### Build for Fisheye View Mavlink2
 1. The build folder is too large to upload to bitbucket.
@@ -42,7 +41,7 @@ For build your own unity scene and guide to modify please refer to **(Build-your
 3. Start Server.exe. Select environment "Science Centre"
 4. Start Client01.exe. Select Sim Mode "DebugOnlyReference"
 4. Launch nus_unity_socket
-5. The fisheye image topic is /hil/sensor/stereo/right/image_raw
+5. The fisheye image topic is `/hil/sensor/stereo/right/image_raw` and `/hil/sensor/stereo/right/image_raw`
 
 ### Build for Leviosa Mavlink2
 1. The build folder is too large to upload to bitbucket.
@@ -50,4 +49,4 @@ For build your own unity scene and guide to modify please refer to **(Build-your
 3. Start Server.exe. Select environment "Science Centre"
 4. Start Client01.exe. Select Sim Mode "Vision" if DJI simulation pose is used.
 5. Launch nus_unity_socket
-6. Publish DJI (ENU) pose to /mavros/vision_pose/pose
+6. Publish DJI (ENU) pose to `/mavros/vision_pose/pose`
