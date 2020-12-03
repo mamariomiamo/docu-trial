@@ -68,7 +68,8 @@ Try not to bundle the cable near the propellers for safety purposes.
 7. Calibrate sensors
 8. Set up and calibrate radio (controller)
 
->Press the LINK/MODE on receiver until the red light turns green to connect the controller to receiver.
+
+>In order to connect the controller to receiver, press the LINK/MODE on receiver until the red light start blinking and then turn on the controller. When the light turns green, the connection is done.
 
 9. Set up flight mode
 
