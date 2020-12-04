@@ -56,6 +56,7 @@ module.exports = {
         'hardware/px4-firmware/px4-toolchain-installation-setup',
         'hardware/px4-firmware/px4-log-analysis',
         'hardware/px4-firmware/px4-sitl',
+        'hardware/px4-firmware/px4-control-structure',
         'hardware/px4-firmware/mavlink-imu',
         'hardware/px4-firmware/time-synchronisation',
         'hardware/px4-firmware/px4-camera-trigger',
