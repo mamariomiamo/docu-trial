@@ -153,6 +153,10 @@ module.exports = {
       'research/edt/MapUpdater',
       'research/edt/stereo',
       ],
+      'MSCKF_VIO Loop Closure': [
+        'research/msckf_vio/loop_closure',
+        ],
+
   },
 
   // systems
