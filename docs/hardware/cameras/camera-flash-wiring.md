@@ -10,11 +10,11 @@
 **Wiring diagram**
 ![](./wiring-diagram.png)
 
-**
+
 
 **Camera trigger Opamp**
 
-**
+
 Camera trigger signal from pixhawk/pixhack has a voltage of 2.3V, while the camera modules require 3.3-5V in order to be counted as an active high signal. An opamp is hence used to amplify the signal.
 
   
@@ -25,6 +25,7 @@ Purpose: Amplify signal between pixhawk AUX pins and Camera
 ![](./opamp-pins.png)
 
 Procedures: 
+
 1) Remove the two resistors as above and short using solder. (Blue arrows)
 
   
@@ -57,7 +58,7 @@ Pinout
 
 **Strobe setting(Inside tcam capture)**
 
-![](./strobe settings.png)
+![](./strobe-settings.png)
 
 Important settings:
 

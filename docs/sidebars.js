@@ -48,6 +48,10 @@ module.exports = {
       'hardware/cameras/tiscamera-install',
       'hardware/cameras/realsense-install',
       'hardware/cameras/zed-install',
+      ],
+      'Camera - Flash wiring': [
+      'hardware/cameras/camera-flash-wiring'
+
       ]
   },
   px4firmwareSidebar: {
@@ -141,6 +145,7 @@ module.exports = {
       'research/calibration/calibration-procedures',
       'research/calibration/verify-by-kalibr-validator',
       'research/calibration/verify-by-triangulation-depth',
+      'research/calibration/Calibration results/Calibration results', 
       ],
       'VIO': [
       'research/vio/basalt-overview',
