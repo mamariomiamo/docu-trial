@@ -176,3 +176,5 @@ $ sudo chmod a+rw /dev/ttyTHS0
 :::tip
 Compiled information can be found [here](https://github.com/DiegoHerrera1890/Pixhawk-connected-to-Jetson-Tx2-devkit).
 :::
+
+## Tuning
