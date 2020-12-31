@@ -146,6 +146,7 @@ $ ls /dev/tty*
 >To verify the TX/RX ports, make sure the content you type in shows on the terminal.
 
 #### 5. Modify the line shown below in _px4.launch_ file
+(path: ~/catkin_ws/src/mavros/mavros/launch)
 
 ![](./UAVphoto/YJ4.jpg)
 
@@ -166,7 +167,18 @@ Pin configuration of TELEM2 on PX4 (from left to right) is 5V, RX, TX, CTS, RTS,
 
 5.2. Boot up PX4 and check if anything shows up on the Minicom on Jetson Xavier
 
-#### 6. Run roslaunch mavros px4.launch
+#### 6. Run px4.launch file 
+
+6.1. IN px4.launch file, make sure fcu_url is modified as stated in step 5
+
+6.2. Change gcs_url into "udp://ip_address"  
+
+>The IP address inserted is the IP address of the computer where QGroundControl will run on. Therefore, when px4.launch file runs, the QGroundControl will be automatically connected to the pixhawk.
+
+6.3. Run the following command in terminal
+```
+$ roslaunch mavros px4.launch
+```
 ```
 # Can try the following line if encounter error 
 # DeviceError: serial: open: Permission denied
@@ -176,5 +188,43 @@ $ sudo chmod a+rw /dev/ttyTHS0
 :::tip
 Compiled information can be found [here](https://github.com/DiegoHerrera1890/Pixhawk-connected-to-Jetson-Tx2-devkit).
 :::
+
+:::tip
+When UART port (THS0) is used to connect to pixhawk, warnings keep showing up while px4.launch file is running. However, when USB port (USB0) is used, px4.launch file runs normally.
+(?)
+:::
+
+## Vicon
+
+Check out [website](http://172.18.72.192/tech-details/docs/systems/vicon) to setup vicon.
+
+## Remote desktop
+
+FYI:
+Local host is the current host in which you are logged in.
+Remote host is the host to which you are trying to connect from the local host .
+
+### Access Ubuntu remotely from Ubuntu
+
+* SSH
+1. Make sure both local host and remote host is connected to the same network 
+2. On local host, run the following command in terminal
+```
+$ ssh desktop_name@ip_address_of_remote_host
+$ ssh yt@192.168.1.124  #example
+```
+3. Enter _exit_ to end SSH session
+
+* VNC
+1. Make sure _Remmina_ is installed in both host
+2. Make sure both local host and remote host is connected to the same network 
+3. On remote host, open the Settings, under Sharing, turn on both screen sharing and remote login
+4. Open Remmina, select VNC and enter the IP address of remote host 
+
+### Access Ubuntu remotely from Macos
+
+* VNC
+1. Make sure both local host and remote host is connected to the same network 
+2. Finder > Go > Connect to server > Browse > Select > Share screen (at top right of the window) 
 
 ## Tuning
