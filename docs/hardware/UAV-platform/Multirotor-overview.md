@@ -7,7 +7,7 @@ sidebar_label: Multirotor Overview
 
 Multirotor is a class of rotor craft that our group uses for control, perception and swarm algorithm development and testing.
 
-# How to build a UAV platform
+## How to build a UAV platform
 ### 1. Solder the ESC to the PCB base plate
 ![](./UAVphoto/s1.jpg)
 
@@ -89,9 +89,22 @@ Check out the [website](https://dev.px4.io/master/en/companion_computer/pixhawk_
 
 #### 1. Set up [Jetson Xavier NX Developer Kit](https://developer.nvidia.com/embedded/learn/get-started-jetson-xavier-nx-devkit#write)
 
-#### 2. Install [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
+#### 2. Install software with SDK Manager
 
-#### 3. Follow the instructions at [DroneCode](https://dev.px4.io/master/en/ros/mavros_installation.html) or [TSL page](172.18.72.192) to compile [MAVROS](https://github.com/mavlink/mavros/blob/master/mavros/README.md)
+2.1. Download [SDK Manager](https://developer.nvidia.com/nvidia-sdk-manager) on a developer host machine
+
+2.2. Connect Xavier to the developer host machine via micro USB port
+
+2.3. Follow the [instructions](https://docs.nvidia.com/sdk-manager/install-with-sdkm-jetson/index.html) 
+
+:::note
+Untick Jetson OS at Step 3
+:::
+
+#### 3. Install [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
+
+#### 4. Follow the _source installation instructions_ at [DroneCode](https://dev.px4.io/master/en/ros/mavros_installation.html) to compile [MAVROS](https://github.com/mavlink/mavros/blob/master/mavros/README.md)
+
 
 :::note
 Add the following lines into .bashrc
@@ -107,22 +120,22 @@ source /home/yt/catkin_ws/devel/setup.bash
 ```
 :::
 
-#### 4. Check serial port (TX/RX) using [loopback test](https://amitasinghchauhan.medium.com/serial-port-debugging-101-loopback-test-4a7e40da9055)
+#### 5. Check serial port (TX/RX) using [loopback test](https://amitasinghchauhan.medium.com/serial-port-debugging-101-loopback-test-4a7e40da9055)
 
-4.1. Connect the TX and RX port using one cable in order to perform loopback test
+5.1. Connect the TX and RX port using one cable in order to perform loopback test
 
-:::note
+:::tip
 The pin configuration of Jetson Xavier NX Developer Kit can be found [here](https://www.jetsonhacks.com/nvidia-jetson-xavier-nx-gpio-header-pinout/).
 :::
 
-4.2. Set up Minicom
+5.2. Set up Minicom
 
 ```
 $ sudo apt-get install minicom
 $ minicom
 ```
 
-4.3. Open up Minicom and perform loopback test
+5.3. Open up Minicom and perform loopback test
 ```
 $ sudo minicom -D /dev/ttyTHS0 
 ```
@@ -145,7 +158,7 @@ $ ls /dev/tty*
 
 >To verify the TX/RX ports, make sure the content you type in shows on the terminal.
 
-#### 5. Modify the line shown below in _px4.launch_ file
+#### 6. Modify the line shown below in _px4.launch_ file
 (path: ~/catkin_ws/src/mavros/mavros/launch)
 
 ![](./UAVphoto/YJ4.jpg)
@@ -157,25 +170,25 @@ $ ls /dev/tty*
 Check the baudrate of TELEM2 on QGroundControl by searching the parameter _SER_TEL2_BAUD_.
 :::
 
-#### 5. Check the connection between PX4 and Jetson Xavier
+#### 7. Check the connection between PX4 and Jetson Xavier
 
-5.1. Connect RX, TX and GND pin on Jetson Xavier to TELEM2 on PX4
+7.1. Connect RX, TX and GND pin on Jetson Xavier to TELEM2 on PX4
 
 :::note
 Pin configuration of TELEM2 on PX4 (from left to right) is 5V, RX, TX, CTS, RTS, GND.
 :::
 
-5.2. Boot up PX4 and check if anything shows up on the Minicom on Jetson Xavier
+7.2. Boot up PX4 and check if anything shows up on the Minicom on Jetson Xavier
 
-#### 6. Run px4.launch file 
+#### 8. Run px4.launch file 
 
-6.1. IN px4.launch file, make sure fcu_url is modified as stated in step 5
+8.1. In px4.launch file, make sure fcu_url is modified as stated in step 5
 
-6.2. Change gcs_url into "udp://ip_address"  
+8.2. Change gcs_url into "udp://@ip_address"  
 
 >The IP address inserted is the IP address of the computer where QGroundControl will run on. Therefore, when px4.launch file runs, the QGroundControl will be automatically connected to the pixhawk.
 
-6.3. Run the following command in terminal
+8.3. Run the following command in terminal
 ```
 $ roslaunch mavros px4.launch
 ```
@@ -197,6 +210,41 @@ When UART port (THS0) is used to connect to pixhawk, warnings keep showing up wh
 ## Vicon
 
 Check out [website](http://172.18.72.192/tech-details/docs/systems/vicon) to setup vicon.
+
+## ZED Camera
+
+> Nvidia Jetson Xavier NX has CUDA 10.2 pre-installed. (in Step 2 under #Nvidia Jetson Xavier NX)
+
+1. Chech CUDA version
+
+```
+$ apt policy cuda 
+# may show N: Unable to locate package cuda
+
+# insert below lines in .bashrc file (change "cuda" according to the version you have downloaded) before runningthe next command
+export PATH=/usr/local/cuda-10.2/bin${PATH:+:${PATH}}$
+export LD_LIBRARY_PATH=/usr/local/cuda-10.2/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+
+# run
+$ nvcc --version
+```
+
+2. Download ZED SDK for Jetpack 4.43.3.3 (Jetson Nano, NX, TX2, Xavier, CUDA 10.2) at [Stereolabs](https://www.stereolabs.com/developers/release/)
+
+3. Follow the [instructions](https://www.stereolabs.com/docs/installation/jetson/) to install ZED SDK
+
+4. Installation of ZED ROS Wrapper
+
+```
+$ cd ~/catkin_ws/src
+$ git clone https://github.com/stereolabs/zed-ros-wrapper.git
+$ cd ../
+$ rosdep install --from-paths src --ignore-src -r -y
+$ catkin build -DCMAKE_BUILD_TYPE=Release
+$ source ./devel/setup.bash
+```
+
+---
 
 ## Remote desktop
 
@@ -228,3 +276,14 @@ $ ssh yt@192.168.1.124  #example
 2. Finder > Go > Connect to server > Browse > Select > Share screen (at top right of the window) 
 
 ## Tuning
+
+### Installing ZED SDK on Nvidia Jetson Xavier NX
+1. Setup the JetPack using this [link](https://developer.nvidia.com/embedded/jetpack)
+2. Under **NVIDIA SDK Manager method**, click on Download NVIDIA SDK Manager. Make sure to install the SDK manager on another computer. (Do not install it on the Nvidia Xavier NX)
+3. After installation and logging in to the Nvidia SDK Manager, connect the Nvidia Xavier NX to your computer using USB.
+4. Ensure that the manager is able to identify your Target Hardware, which is Jetson Xavier NX.
+5. Press **Continue to step 02** 
+6. Before installation begins, uncheck **Jetson OS** under TARGET COMPONENTS 
+![](./UAVphoto/SDK_Manager_1.png)
+7. Enter your sudo password 
+8. 
