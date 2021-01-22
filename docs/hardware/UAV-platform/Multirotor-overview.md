@@ -57,6 +57,7 @@ Always keep the cables neatly arranged and components fixed in place. It is reco
 Try not to bundle the cable near the propellers for safety purposes.
 :::
 
+
 ## QGroundControl 
 
 1. Download QGroundControl on [DroneCode](https://docs.qgroundcontrol.com/master/en/getting_started/download_and_install.html) (Code is available on [GitHub](https://github.com/mavlink/qgroundcontrol))
@@ -81,9 +82,80 @@ More detailed information can be found on [Vehicle Setup](https://docs.qgroundco
 Safety switch: Double blinking suggests that vehicle can be armed while single blinking suggest that vehicle is not allowed to be armed.
 :::
 
+
+## Tuning
+Tuning is required when creating a **new airframe type** or significantly modifying an existing supported frame. Generally if you're using a supported configuration (e.g. using an airframe in QGroundControl > Airframe) the default tuning should be acceptable (particularly for larger frames).
+
+Reference from [PX4UserGuide](https://docs.px4.io/master/en/config_mc/pid_tuning_guide_multicopter.html) and [dronecode](https://madennis.gitbooks.io/px4user/content/en/advanced_config/pid_tuning_guide_multicopter.html).
+
+>All tuning should be performed in the manual Stabilized flight mode.
+
+Go into **settings** > **tuning** > click on the **advance** at the topright corner
+
+![](./UAVphoto/PID2.png)
+
+**Mavlink Inspector** could also be used to monitor the response from the drone. The response and the command graph should be rather close to one another for a good response from the drone. Check for overshoot or any sluggish response from the drone by feel or looking at the graph. 
+
+![](./UAVphoto/PID1.png)
+
+### **Step 1: Preparation**
+First of all set all parameters to initial values:
+
+1. Set all MC_XXX_P to zero _(ROLL, PITCH, YAW)_
+2. Set all MC_XXXRATE_P, MC_XXXRATE_I, MC_XXXRATE_D to **zero**, except MC_ROLLRATE_P and MC_PITCHRATE_P
+3. Set MC_ROLLRATE_P and MC_PITCHRATE_P to a small value, e.g. 0.02
+4. Set MC_YAW_FF to 0.5
+
+>All gains should be increased slowly, about 20%-30% per iteration, 10% for fine tuning. Large gains may cause very dangerous oscillations.
+
+### **Step 2: Stabilize Roll and Pitch Rates**
+**P Gain Tuning**
+
+Parameters: MC_ROLLRATE_P, MC_PITCHRATE_P.
+
+Tilt it in roll or pitch direction, and observe the response. If it oscillates, tune down RATE_P. Once the control response is slow but correct, increase RATE_P until it starts to oscillate. Cut back RATE_P until it does only mildly oscillate or not oscillate any more (about 10% cutback), just over-shoots. Typical value is around 0.1.
+
+**D Gain Tuning**
+
+Parameters: MC_ROLLRATE_D, MC_PITCHRATE_D.
+
+Assuming the gains are in a state where the multi rotor oscillated and RATE_P was slightly reduced. Slowly increase RATE_D, starting from 0.01. Increase RATE_D to stop the last bit of oscillation. If the motors become twitchy, the RATE_D is too large, cut it back. By playing with the magnitudes of RATE_P and RATE_D the response can be fine-tuned. Typical value is around 0.01…0.02.
+
+**I Gain Tuning**
+
+If the roll and pitch rates never reach the setpoint but have an offset, add MC_ROLLRATE_I and MC_PITCHRATE_I gains, starting at 5-10% of the MC_ROLLRATE_P gain value.
+
+### **Step 3: Stabilize Roll and Pitch Angles**
+**P Gain Tuning**
+
+Parameters: MC_ROLL_P, MC_PITCH_P.
+
+Set MC_ROLL_P and MC_PITCH_P to a small value, e.g. 3
+Tilt it in roll or pitch direction, and observe the response. If it oscillates, tune down P. Once the control response is slow but correct, increase P until it starts to oscillate. Optimal response is some overshoot (~10-20%). After getting stable response fine tune RATE_P, RATE_D again.
+
+
+### **Step 4: Stabilize Yaw Rate**
+**P Gain Tuning**
+
+Parameters: MC_YAWRATE_P.
+
+Set MC_YAWRATE_P to small value, e.g. 0.1
+
+If it oscillates or becomes twitchy, tune down RATE_P. If response is very large even on small movements (full throttle spinning vs idle spinning propellers) reduce RATE_P. Typical value is around 0.2…0.3.
+
+### **Step 5: Stabilize Yaw Angle**
+**P Gain Tuning**
+
+Parameters: MC_YAW_P.
+
+Set MC_YAW_P to a low value, e.g. 1
+If it oscillates, tune down P. Once the control response is slow but correct, increase P until the response is firm, but it does not oscillate. Typical value is around 2…3.
+
+
 ## Pixhawk 
 
 Check out the [website](https://dev.px4.io/master/en/companion_computer/pixhawk_companion.html) to set up the TELEM2 port for companion computer.
+
 
 ## Nvidia Jetson Xavier NX
 
@@ -158,7 +230,9 @@ $ ls /dev/tty*
 
 >To verify the TX/RX ports, make sure the content you type in shows on the terminal.
 
-#### 6. Modify the line shown below in _px4.launch_ file
+#### 6. Modify the line shown bel11
+
+ow in _px4.launch_ file
 (path: ~/catkin_ws/src/mavros/mavros/launch)
 
 ![](./UAVphoto/YJ4.jpg)
@@ -207,34 +281,33 @@ When UART port (THS0) is used to connect to pixhawk, warnings keep showing up wh
 (?)
 :::
 
+
 ## Vicon
 
 Check out [website](http://172.18.72.192/tech-details/docs/systems/vicon) to setup vicon.
 
-## ZED Camera
 
-> Nvidia Jetson Xavier NX has CUDA 10.2 pre-installed. (in Step 2 under #Nvidia Jetson Xavier NX)
+## Camera
 
-1. Chech CUDA version
+1. Check CUDA version
+
+Jetson Xavier has CUDA 10.2 pre-installed by SDK Manager
 
 ```
-$ apt policy cuda 
-# may show N: Unable to locate package cuda
-
-# insert below lines in .bashrc file (change "cuda" according to the version you have downloaded) before runningthe next command
+# insert the following lines in .bashrc
 export PATH=/usr/local/cuda-10.2/bin${PATH:+:${PATH}}$
-export LD_LIBRARY_PATH=/usr/local/cuda-10.2/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+export LD_LIBRARY_PATH=/usr/local/cuda-10.2/lib64${LD_LIBRARY_PATH:+:${LD_LIBRA$
 
-# run
-$ nvcc --version
+# check CUDA version
+$ nvcc  --version
+$ apt policy cuda  # might have error 
 ```
 
-2. Download ZED SDK for Jetpack 4.43.3.3 (Jetson Nano, NX, TX2, Xavier, CUDA 10.2) at [Stereolabs](https://www.stereolabs.com/developers/release/)
+2. Download ZED SDK for Jetpack 4.4 3.3.3 (Jetson Nano, NX, TX2, Xavier, CUDA 10.2) from [Stereolabs](https://www.stereolabs.com/developers/release/)
 
-3. Follow the [instructions](https://www.stereolabs.com/docs/installation/jetson/) to install ZED SDK
+3. Follow the [instructions](https://www.stereolabs.com/docs/installation/linux/) to install ZED SDK
 
-4. Installation of ZED ROS Wrapper
-
+4. Download [ZED ROS Wrapper](172.18.72.192)
 ```
 $ cd ~/catkin_ws/src
 $ git clone https://github.com/stereolabs/zed-ros-wrapper.git
@@ -243,6 +316,9 @@ $ rosdep install --from-paths src --ignore-src -r -y
 $ catkin build -DCMAKE_BUILD_TYPE=Release
 $ source ./devel/setup.bash
 ```
+:::note
+The program is located at /usr/local/zed/tools
+:::
 
 ---
 
@@ -275,15 +351,3 @@ $ ssh yt@192.168.1.124  #example
 1. Make sure both local host and remote host is connected to the same network 
 2. Finder > Go > Connect to server > Browse > Select > Share screen (at top right of the window) 
 
-## Tuning
-
-### Installing ZED SDK on Nvidia Jetson Xavier NX
-1. Setup the JetPack using this [link](https://developer.nvidia.com/embedded/jetpack)
-2. Under **NVIDIA SDK Manager method**, click on Download NVIDIA SDK Manager. Make sure to install the SDK manager on another computer. (Do not install it on the Nvidia Xavier NX)
-3. After installation and logging in to the Nvidia SDK Manager, connect the Nvidia Xavier NX to your computer using USB.
-4. Ensure that the manager is able to identify your Target Hardware, which is Jetson Xavier NX.
-5. Press **Continue to step 02** 
-6. Before installation begins, uncheck **Jetson OS** under TARGET COMPONENTS 
-![](./UAVphoto/SDK_Manager_1.png)
-7. Enter your sudo password 
-8. 
