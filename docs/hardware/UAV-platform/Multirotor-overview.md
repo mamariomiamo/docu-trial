@@ -57,6 +57,7 @@ Always keep the cables neatly arranged and components fixed in place. It is reco
 Try not to bundle the cable near the propellers for safety purposes.
 :::
 
+---
 
 ## QGroundControl 
 
@@ -151,17 +152,19 @@ Parameters: MC_YAW_P.
 Set MC_YAW_P to a low value, e.g. 1
 If it oscillates, tune down P. Once the control response is slow but correct, increase P until the response is firm, but it does not oscillate. Typical value is around 2…3.
 
+---
 
 ## Pixhawk 
 
 Check out the [website](https://dev.px4.io/master/en/companion_computer/pixhawk_companion.html) to set up the TELEM2 port for companion computer.
 
+---
 
 ## Nvidia Jetson Xavier NX
 
-#### 1. Set up [Jetson Xavier NX Developer Kit](https://developer.nvidia.com/embedded/learn/get-started-jetson-xavier-nx-devkit#write)
+### 1. Set up [Jetson Xavier NX Developer Kit](https://developer.nvidia.com/embedded/learn/get-started-jetson-xavier-nx-devkit#write)
 
-#### 2. Install software with SDK Manager
+### 2. Install software with SDK Manager
 
 2.1. Download [SDK Manager](https://developer.nvidia.com/nvidia-sdk-manager) on a developer host machine
 
@@ -173,9 +176,9 @@ Check out the [website](https://dev.px4.io/master/en/companion_computer/pixhawk_
 Untick Jetson OS at Step 3
 :::
 
-#### 3. Install [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
+### 3. Install [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
 
-#### 4. Follow the _source installation instructions_ at [DroneCode](https://dev.px4.io/master/en/ros/mavros_installation.html) to compile [MAVROS](https://github.com/mavlink/mavros/blob/master/mavros/README.md)
+### 4. Follow the _source installation instructions_ at [DroneCode](https://dev.px4.io/master/en/ros/mavros_installation.html) to compile [MAVROS](https://github.com/mavlink/mavros/blob/master/mavros/README.md)
 
 
 :::note
@@ -192,7 +195,7 @@ source /home/yt/catkin_ws/devel/setup.bash
 ```
 :::
 
-#### 5. Check serial port (TX/RX) using [loopback test](https://amitasinghchauhan.medium.com/serial-port-debugging-101-loopback-test-4a7e40da9055)
+### 5. Check serial port (TX/RX) using [loopback test](https://amitasinghchauhan.medium.com/serial-port-debugging-101-loopback-test-4a7e40da9055)
 
 5.1. Connect the TX and RX port using one cable in order to perform loopback test
 
@@ -230,7 +233,7 @@ $ ls /dev/tty*
 
 >To verify the TX/RX ports, make sure the content you type in shows on the terminal.
 
-#### 6. Modify the line shown bel11
+### 6. Modify the line shown bel11
 
 ow in _px4.launch_ file
 (path: ~/catkin_ws/src/mavros/mavros/launch)
@@ -244,7 +247,7 @@ ow in _px4.launch_ file
 Check the baudrate of TELEM2 on QGroundControl by searching the parameter _SER_TEL2_BAUD_.
 :::
 
-#### 7. Check the connection between PX4 and Jetson Xavier
+### 7. Check the connection between PX4 and Jetson Xavier
 
 7.1. Connect RX, TX and GND pin on Jetson Xavier to TELEM2 on PX4
 
@@ -254,7 +257,7 @@ Pin configuration of TELEM2 on PX4 (from left to right) is 5V, RX, TX, CTS, RTS,
 
 7.2. Boot up PX4 and check if anything shows up on the Minicom on Jetson Xavier
 
-#### 8. Run px4.launch file 
+### 8. Run px4.launch file 
 
 8.1. In px4.launch file, make sure fcu_url is modified as stated in step 5
 
@@ -286,6 +289,7 @@ When UART port (THS0) is used to connect to pixhawk, warnings keep showing up wh
 
 Check out [website](http://172.18.72.192/tech-details/docs/systems/vicon) to setup vicon.
 
+---
 
 ## Camera
 
@@ -307,7 +311,7 @@ $ apt policy cuda  # might have error
 
 3. Follow the [instructions](https://www.stereolabs.com/docs/installation/linux/) to install ZED SDK
 
-4. Download [ZED ROS Wrapper](172.18.72.192)
+4. Download [ZED ROS Wrapper](https://www.stereolabs.com/docs/ros/)
 ```
 $ cd ~/catkin_ws/src
 $ git clone https://github.com/stereolabs/zed-ros-wrapper.git
