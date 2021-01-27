@@ -13,11 +13,17 @@ In general, the topic [`HIGHRES_IMU`](https://mavlink.io/en/messages/common.html
 
 :::caution
 
-The ROS message `/mavros/imu/data` is an aggregation of a mixture of MAVLINK messages. The data rate is determined either by `ATTITUDE` or `ATTITUDE_QUATERNION` (take precedence), NOT the IMU data rates from one of the topics: `RAW_IMU`, `SCALED_IMUx` or `HIGHRES_IMU`.
+The ROS message `/mavros/imu/data` is an aggregation of a mixture of MAVLINK messages. The data rate is determined either by `ATTITUDE` or `ATTITUDE_QUATERNION` (take precedence), NOT the IMU data rates from one of the topics: `RAW_IMU`, `SCALED_IMUx` or `HIGHRES_IMU`, where the latter one take precedence.
 
 
 Also, `/mavros/imu/data` is documented in the code to be `ENU` frame, but in reality carries the same orientation as the `data_raw`, which is `NWU` (`flu`).
 
+:::
+
+:::caution Regarding Bias
+`HIGHRES_IMU` mavlink topic in PX4 firmware will carry bias (calculated from the filter). This may not be ideal to be fed into VIO system.
+`SCALED_IMUx` should come without the estimated bias.
+`RAW_IMU` seems to be not used in PX4 firmware.
 :::
 
 ## IMU Data Rates
@@ -28,6 +34,14 @@ Also, `/mavros/imu/data` is documented in the code to be `ENU` frame, but in rea
 
 Place the `extras.txt` file in the `etc/` folder within the SD card for Pixhawk.
 
+First in the QGC's mavlink console, identify the tty device, by typing `mavlink status` in the console. Example output is "/dev/ttyS2"
+#### Using `SCALED_IMUx`
+```bash
+mavlink stream -d /dev/ttyACM0 -s HIGHRES_IMU -r 0
+mavlink stream -d /dev/ttyS2 -s HIGHRES_IMU -r 0
+
+```
+#### Using `HIGHRES_IMU` (not recommnaded)
 ```bash
 mavlink stream -d /dev/ttyACM0 -s HIGHRES_IMU -r 300
 mavlink stream -d /dev/ttyS2 -s HIGHRES_IMU -r 300
