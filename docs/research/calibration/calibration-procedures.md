@@ -3,9 +3,11 @@ hide_title: true
 sidebar_label: Calibration Procedures
 ---
 
-# Calibration Procedures
+# Calibration Procedures 
 
 Cameras should ideally be mounted horizontally against a rigit blackplate, such as aluminium or acrylic. If movement of the entire mount cannot be eliminated it would then be prudent to ensure the cameras does not flex independently against each other.
+
+VNC into `nvidia-desktop.local`
 
 ## For Multi-camera calibration
 **Changing the pixhawk IMU frequency**
