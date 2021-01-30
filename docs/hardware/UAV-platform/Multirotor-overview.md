@@ -324,6 +324,19 @@ $ source ./devel/setup.bash
 The program is located at /usr/local/zed/tools
 :::
 
+5. Open a terminal and use roslaunch to start the ZED node:
+
+ZED camera: $ roslaunch zed_wrapper zed.launch
+
+ZED Mini camera: $ roslaunch zed_wrapper zedm.launch
+
+ZED 2 camera: $ roslaunch zed_wrapper zed2.launch
+
+6. Download tutorial files from ...
+[cv_bridge](https://cyaninfinite.com/ros-cv-bridge-with-python-3/)
+
+
+
 ---
 
 ## Remote desktop
