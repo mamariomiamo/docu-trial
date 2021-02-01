@@ -332,8 +332,9 @@ ZED Mini camera: $ roslaunch zed_wrapper zedm.launch
 
 ZED 2 camera: $ roslaunch zed_wrapper zed2.launch
 
-6. Download tutorial files from ...
-[cv_bridge](https://cyaninfinite.com/ros-cv-bridge-with-python-3/)
+6. Download cv_bridge from github
+
+7. reference for cpp[https://zhuanlan.zhihu.com/p/56565582]
 
 
 
