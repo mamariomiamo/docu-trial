@@ -179,6 +179,10 @@ module.exports = {
       'Vicon': [
           'systems/vicon',
       ],
+      'Leviosa Platform':[
+        'systems/leviosa/leviosa',
+        'systems/leviosa/getting-started'
+      ],
       'Past Platforms : ddrone v2': [
         'systems/ddrone_v2/ddrone',
         'systems/ddrone_v2/getting-started',

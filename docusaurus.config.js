@@ -97,6 +97,10 @@ module.exports = {
                   to: 'docs/systems/vicon'
                 },
                 {
+                  label: 'Leviosa Platform',
+                  to: 'docs/systems/leviosa/leviosa'
+                },
+                {
                   // activeBasePath:'docs/systems/ddrone_v2',
                   label: 'Past Platforms : ddrone v2',
                   to: 'docs/systems/ddrone_v2/ddrone'
@@ -256,7 +260,7 @@ module.exports = {
           // homePageId: 'examples/doc1',
           sidebarPath: require.resolve('./docs/sidebars.js'),
           // Please change this to your repo.
-          // editUrl: 'file://deptnas.nus.edu.sg/TSL/Research/Centre%20Flight%20Science/Intelligent%20Unmanned%20Systems/Research%20Data%20Backup/Users/00_Tech_Details',
+          // editUrl: 'ftp://172.18.72.192/docusaurus_html/tl-tech-details',
           
           showLastUpdateTime: true,
           remarkPlugins: [remarkMath],
