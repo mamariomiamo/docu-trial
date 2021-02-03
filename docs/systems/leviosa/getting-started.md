@@ -7,7 +7,7 @@ sidebar_label: Getting Started
 
 ## Pre-requisite
 - Xavier NX Development Kit Hardware
-  - Flashed with the lastest OS from nvidia, as well as CUDA (recommand to install using recovery mode + SDK manager)
+  - Flashed with the lastest OS from nvidia, as well as CUDA (recommand to install using recovery mode + SDK manager). Remarks: Install NVIDIA SDK manager in a Linux machine; Use jumper wire to short RCV pin with GND pin on Xavier module.
 - Assume username to be `nvidia`
 
 ## Install tiscamera Camera Driver
@@ -31,7 +31,7 @@ sidebar_label: Getting Started
 ## Install Basic ROS Dependencies
 
 1. Mavlink, install by apt manager: `ros-melodic-mavlink`
-2. Mavros, the modified monotonic version is needed: (https://github.com/chengguizi/mavros, monotonic branch)
+2. Mavros, the modified monotonic version is needed: (https://github.com/chengguizi/mavros, monotonic branch, Notes: clone the source code, the source code should be place within the ./src folder. Then go to catkin_ws folder to build the code using cmd `catkin build`)
 
 
 ## Install Camera ROS Wrapper

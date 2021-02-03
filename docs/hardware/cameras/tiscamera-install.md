@@ -23,6 +23,8 @@ For Intel-based processor, you may choose to install the official compiled **tis
 
 :::note
 - As of Jan 2021, we are using version 0.12.0
+- For TX2 or Xavier, if cannot build from source, can try to install the official compiled tiscamera package  `tiscamera_0.12.0_arm64.deb` directly.
+
 :::
 
 However, it is strongly recommanded to build from source, for the main tiscamera driver, especially on Nvidia arm64 platform.
@@ -30,6 +32,11 @@ However, it is strongly recommanded to build from source, for the main tiscamera
 ### Build `tiscamera` From Source
 0. Install `GStreamer` through apt first
 1. Clone `https://github.com/TheImagingSource/tiscamera` and checkout the release version, for example `v-tiscamera-0.12.0`
+
+    ``` bash
+    git clone https://github.com/TheImagingSource/tiscamera.git
+    git checkout v-tiscamera-0.12.0
+    
 2. Change CMakeList.txt `BUILD_TOOLS` to `ON`
 3. (Jetson TX2) Install dependencies `gstreamer-1.0 libusb-1.0 libglib2.0 libgirepository1.0-dev libudev-dev libtinyxml-dev libzip-dev libnotify-dev`
 4. Install python dependencies `python3-gi python3-pyqt5`
@@ -48,7 +55,7 @@ Also install the **dutils** package here `tiscamera-dutils_1.0.0.160`
 https://github.com/chengguizi/tiscamera_ros/tree/master/sdk_debs
 
 :::tip
-To verify driver installation, run `tcam-capture`, and there should be an option for tonemapping showing up. Otherwise, the installation is unsuccessful.
+To verify driver installation, connect the camera using usb cable, then run `tcam-capture`, and there should be an option for tonemapping showing up. Otherwise, the installation is unsuccessful.
 
 Also, in `gst-inspect-1.0 tcambin`, the `dutil` should have default to be true.
 :::
