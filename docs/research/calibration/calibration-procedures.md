@@ -72,12 +72,11 @@ Start the imaging capture by running tisbag script
 
     ./tisbag
 If script is unavailable:
+```bash
 
-> rosbag record --lz4 /mavros/imu/data 
-> /tiscamera_ros/fisheye_left/camera_info  
-> /tiscamera_ros/fisheye_left/image_rect_raw  
-> /tiscamera_ros/fisheye_right/camera_info  
-> /tiscamera_ros/fisheye_right/image_rect_raw
+> rosbag record --lz4 /mavros/imu/data /tiscamera_ros/fisheye_left/camera_info /tiscamera_ros/fisheye_left/image_rect_raw /tiscamera_ros/fisheye_right/camera_info /tiscamera_ros/fisheye_right/image_rect_raw
+
+```
 
 If the script cannot be run due to a lack of permission, permission canbe added to file
 

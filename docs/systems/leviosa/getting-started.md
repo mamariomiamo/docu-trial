@@ -32,6 +32,7 @@ sidebar_label: Getting Started
 
 1. Mavlink, install by apt manager: `ros-melodic-mavlink`
 2. Mavros, the modified monotonic version is needed: (https://github.com/chengguizi/mavros, monotonic branch, Notes: clone the source code, the source code should be place within the ./src folder. Then go to catkin_ws folder to build the code using cmd `catkin build`)
+3. Install `cv_bridge` from source, refer [here](/docs/linux/ros/cv-bridge)
 
 
 ## Install Camera ROS Wrapper

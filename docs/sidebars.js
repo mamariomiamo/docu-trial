@@ -102,6 +102,7 @@ module.exports = {
           'linux/ros/installation',
           'linux/ros/using-catkin-build',
           'linux/ros/roslib.js',
+          'linux/ros/cv-bridge'
       ],
       'Drivers & Kernel': [
           'linux/kernel/grub-default-kernel',

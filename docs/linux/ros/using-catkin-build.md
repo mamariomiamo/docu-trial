@@ -17,5 +17,13 @@ sudo apt install python-catkin-tools
 rosdep install --from-paths src --ignore-src -r -y
 ```
 
+
+
+### Source catkin_ws in bashrc
+
+```bash
+# Navigate to the root path of the catkin workspace, e.g. cd /home/bashrc, CTRL+h to show the bashrc file
+source /home/catkin_ws/devel/setup.bash
+```
 Reference:
 http://wiki.ros.org/rosdep 
