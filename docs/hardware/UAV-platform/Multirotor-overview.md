@@ -336,6 +336,19 @@ ZED 2 camera: $ roslaunch zed_wrapper zed2.launch
 
 7. reference for cpp[https://zhuanlan.zhihu.com/p/56565582]
 
+---
+## Teraranger Evo 60m
+
+1. Connect the sensor to pixhawk autopilot 
+https://www.terabee.com/connection-to-pixhawk-autopilots-teraranger-evo/
+
+2. Download ROS package for TeraRanger modules
+https://github.com/Terabee/teraranger
+
+3. Download ROS package for TeraRanger array solutions
+https://github.com/Terabee/teraranger_array
+
+4. 
 
 
 ---
