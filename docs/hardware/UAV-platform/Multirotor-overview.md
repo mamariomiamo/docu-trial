@@ -311,6 +311,10 @@ $ apt policy cuda  # might have error
 
 3. Follow the [instructions](https://www.stereolabs.com/docs/installation/linux/) to install ZED SDK
 
+:::note
+The program is located at /usr/local/zed/tools
+:::
+
 4. Download [ZED ROS Wrapper](https://www.stereolabs.com/docs/ros/)
 ```
 $ cd ~/catkin_ws/src
@@ -320,9 +324,6 @@ $ rosdep install --from-paths src --ignore-src -r -y
 $ catkin build -DCMAKE_BUILD_TYPE=Release
 $ source ./devel/setup.bash
 ```
-:::note
-The program is located at /usr/local/zed/tools
-:::
 
 5. Open a terminal and use roslaunch to start the ZED node:
 
@@ -334,7 +335,9 @@ ZED 2 camera: $ roslaunch zed_wrapper zed2.launch
 
 6. Download cv_bridge from github
 
-7. reference for cpp[https://zhuanlan.zhihu.com/p/56565582]
+:::note
+Reference  code used for [cpp](https://zhuanlan.zhihu.com/p/56565582)
+:::
 
 ---
 ## Teraranger Evo 60m
@@ -342,13 +345,33 @@ ZED 2 camera: $ roslaunch zed_wrapper zed2.launch
 1. Connect the sensor to pixhawk autopilot 
 https://www.terabee.com/connection-to-pixhawk-autopilots-teraranger-evo/
 
-2. Download ROS package for TeraRanger modules
-https://github.com/Terabee/teraranger
+2. Enable the parameter SENS_EN_TRANGER in QGC (Parameters->sensors)
 
-3. Download ROS package for TeraRanger array solutions
-https://github.com/Terabee/teraranger_array
 
-4. 
+> If SENS_EN_TRANGER cannot be found, follow the steps below:
+>1. Insert ```distance_sensor/teraranger ```
+under ```DRIVERS``` in ```Firmware/boards/px4/fmu-v2/default.cmake``` file.
+>
+>2. Type ```make px4_fmu-v2``` under ```Firmware``` directory in terminal.
+>
+>3. Flash the firmware file(```Firmware/build/px4_fmu-v2_default/px4_fmu-v2_Default.px4```) to the board via QGC.
+>
+>4. Now SENS_EN_TRANGER is visible in the parameters menu.
+
+
+3. Remove distance_sensor from blacklist in ```~/catkin_ws/src/mavros/mavros/launch/px4_pluginlists.yaml```.
+
+4. Modify px4_config.yaml to configure the sensor.
+>Check that ```id``` under publisher is the same as the value found in QGC for ```DISTANCE_SENSOR```.
+
+5. Type this command to check /mavros/distance_sensor/NAME_OF_THE_PUB is running.
+```
+$ rostopic list
+```
+6. Type this command to view the readings of the sensor.
+```
+$ rostopic echo /mavros/distance_sensor/NAME_OF_THE_PUB
+```
 
 
 ---

@@ -150,6 +150,7 @@ module.exports = {
       ],
       'VIO': [
       'research/vio/basalt-overview',
+      'research/vio/basalt-tuning',
       'research/vio/basalt-backend',
       'research/vio/basalt-frontend',
       'research/vio/basalt-tests',
