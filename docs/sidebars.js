@@ -64,10 +64,14 @@ module.exports = {
         'hardware/px4-firmware/mavlink-imu',
         'hardware/px4-firmware/time-synchronisation',
         'hardware/px4-firmware/px4-camera-trigger',
-        'hardware/px4-firmware/px4-ecl-initialisation',
-        'hardware/px4-firmware/px4-ecl-sensor-fusion',
-        'hardware/px4-firmware/px4-ecl-yaw-fusion',
-        'hardware/px4-firmware/px4-ecl-state-reset',
+        
+      ],
+      'ECL EKF':[
+        'hardware/px4-firmware/ecl-ekf/px4-ecl-ekf',
+        'hardware/px4-firmware/ecl-ekf/px4-ecl-initialisation',
+        'hardware/px4-firmware/ecl-ekf/px4-ecl-sensor-fusion',
+        'hardware/px4-firmware/ecl-ekf/px4-ecl-yaw-fusion',
+        'hardware/px4-firmware/ecl-ekf/px4-ecl-state-reset',
       ]
   },
   UAVplatformSidebar: {
