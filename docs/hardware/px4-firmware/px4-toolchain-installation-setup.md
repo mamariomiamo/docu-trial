@@ -3,7 +3,7 @@ hide_title: true
 sidebar_label: Toolchain Installation & Setup
 ---
 
-# Toolchain & Setup
+# Toolchain Installation & Setup
 
 ## Toolchain installation
 
@@ -47,8 +47,10 @@ cd PX4-Autopilot
 make px4_sitl gazebo
 ```
 
+To takeoff, run `commander takeoff` in the PX4 shell.
+
 :::caution
-Sometimes Gazebo fails to load up on the first run. When Gazebo shows a blank screen, try running the above command again.
+Sometimes Gazebo fails to load up on the first run. When Gazebo shows a blank window, try running the above command again.
 :::
 
 Then, try to compile PX4 firmware for fmu-v2 target, more details on different targets [here](https://dev.px4.io/master/en/setup/building_px4.html#nuttx).
@@ -58,6 +60,7 @@ make px4_fmu-v2
 ```
 
 :::tip
-1. If there is built-error like [this](https://github.com/PX4/Firmware/issues/13809), follow the guide [here](https://dev.px4.io/master/en/setup/dev_env_linux_centos.html#gcc-toolchain-installation) to check compiler version.
-2. If you forget the make command, use ```make list_config_targets``` to remind yourself.
+1. If there is build error like [this](https://github.com/PX4/Firmware/issues/13809), follow the guide [here](https://dev.px4.io/master/en/setup/dev_env_linux_centos.html#gcc-toolchain-installation) to check compiler version.
+2. If you forget the make command, use `make list_config_targets` to remind yourself.
+3. After switching branch, submodules are not automatically updated, to update submodules, use `git submodule update --init`
 :::

@@ -21,6 +21,13 @@ sidebar_label: Work with Submodules
 - else, the local branch with the same name already exist, do
    > `git branch -u origin/linear_dt`
 
+### To update submodules after checkingout to a different branch (with different versions of submodules)
+
+```bash
+git checkout <branch>
+git submodule update --init
+```
+
 ### Alias
 
 - add the following file content to `/.git/config`
