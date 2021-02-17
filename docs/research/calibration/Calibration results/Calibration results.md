@@ -9,12 +9,10 @@ Cam 2 and Cam 4 has been further verified using triangulation depth and its resu
  - [Calibration results txt](Cam1/results-cam-2020-09-07-15-43-52.txt)
  - [Calibration report](Cam1/report-cam-2020-09-07-15-43-52.pdf)
 
-## Cam 2
+## Cam 2 (28 Jan 2021)
 
- - [Calibration results yaml](Cam2/camchain-2020-09-07-15-28-51.yaml)
- - [Calibration results txt](Cam2/results-cam-2020-09-07-15-28-51.txt)
- - [Calibration report](Cam2/report-cam-2020-09-07-15-28-51.pdf)
- - [Verification result](Cam2-14-September.pdf)
+ - [Calibration results yaml (cameras)](Cam2/28jan2021/camchain-2021-01-28-11-48-57.yaml)
+ - [Calibration results yaml (cameras-imu)](Cam2/28jan2021/camchain-imucam-2021-01-28-12-29-05.yaml)
 
 ## Cam 3
 
