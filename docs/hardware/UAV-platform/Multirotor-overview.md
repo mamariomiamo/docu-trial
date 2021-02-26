@@ -335,6 +335,11 @@ ZED 2 camera: $ roslaunch zed_wrapper zed2.launch
 
 6. Download cv_bridge from github
 
+7. Data display with Rviz
+```
+$ roslaunch zed_display_rviz display_zedm.launch
+```
+
 :::note
 Reference  code used for [cpp](https://zhuanlan.zhihu.com/p/56565582)
 :::
