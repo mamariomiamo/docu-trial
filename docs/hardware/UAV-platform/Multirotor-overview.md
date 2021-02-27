@@ -344,6 +344,11 @@ $ roslaunch zed_display_rviz display_zedm.launch
 Reference  code used for [cpp](https://zhuanlan.zhihu.com/p/56565582)
 :::
 
+:::note
+Reference for VIO
+[basalt](https://github.com/chengguizi/basalt-mirror/blob/master/src/ros_live_vio.cpp)
+[vision_to_mavros](https://github.com/thien94/vision_to_mavros/blob/master/src/vision_to_mavros.cpp#L194)
+:::
 ---
 ## Teraranger Evo 60m
 
@@ -378,7 +383,15 @@ $ rostopic list
 $ rostopic echo /mavros/distance_sensor/NAME_OF_THE_PUB
 ```
 
+---
 
+## GitHub
+```
+# Push commits
+$ git add .
+$ git commit -m "description"
+$ git push origin master
+```
 ---
 
 ## Remote desktop
