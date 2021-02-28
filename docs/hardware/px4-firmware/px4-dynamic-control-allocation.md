@@ -26,7 +26,7 @@ Currently, PX4 uses static mixing tables that are generated from airframe config
 
 [Download the Draw.io source of the diagram above](./img/ca.drawio)
 
-The source of the control allocation module can be found at `PX4-Autopilot/src/modules/control_allocator/`
+The source of the control [allocation module](https://docs.px4.io/master/en/modules/modules_controller.html#description) can be found at `PX4-Autopilot/src/modules/control_allocator/`
 
 The ControlAllocator class has two important members:
 
