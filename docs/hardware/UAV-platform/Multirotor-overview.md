@@ -293,7 +293,7 @@ Check out [website](http://172.18.72.192/tech-details/docs/systems/vicon) to set
 
 ## Camera
 
-1. Check CUDA version
+**1. Check CUDA version**
 
 Jetson Xavier has CUDA 10.2 pre-installed by SDK Manager
 
@@ -307,15 +307,15 @@ $ nvcc  --version
 $ apt policy cuda  # might have error 
 ```
 
-2. Download ZED SDK for Jetpack 4.4 3.3.3 (Jetson Nano, NX, TX2, Xavier, CUDA 10.2) from [Stereolabs](https://www.stereolabs.com/developers/release/)
+**2. Download ZED SDK for Jetpack 4.4 3.3.3 (Jetson Nano, NX, TX2, Xavier, CUDA 10.2) from [Stereolabs](https://www.stereolabs.com/developers/release/)**
 
-3. Follow the [instructions](https://www.stereolabs.com/docs/installation/linux/) to install ZED SDK
+**3. Follow the [instructions](https://www.stereolabs.com/docs/installation/linux/) to install ZED SDK**
 
 :::note
 The program is located at /usr/local/zed/tools
 :::
 
-4. Download [ZED ROS Wrapper](https://www.stereolabs.com/docs/ros/)
+**4. Download [ZED ROS Wrapper](https://www.stereolabs.com/docs/ros/)**
 ```
 $ cd ~/catkin_ws/src
 $ git clone https://github.com/stereolabs/zed-ros-wrapper.git
@@ -325,17 +325,15 @@ $ catkin build -DCMAKE_BUILD_TYPE=Release
 $ source ./devel/setup.bash
 ```
 
-5. Open a terminal and use roslaunch to start the ZED node:
+**5. Open a terminal and use roslaunch to start the ZED node:**
 
-ZED camera: $ roslaunch zed_wrapper zed.launch
+```
+#ZED Mini camera: 
+$ roslaunch zed_wrapper zedm.launch
+```
+**6. Download cv_bridge from [GitHub](https://github.com/ros-perception/vision_opencv)**
 
-ZED Mini camera: $ roslaunch zed_wrapper zedm.launch
-
-ZED 2 camera: $ roslaunch zed_wrapper zed2.launch
-
-6. Download cv_bridge from github
-
-7. Data display with Rviz
+**7. Data display with Rviz**
 ```
 $ roslaunch zed_display_rviz display_zedm.launch
 ```
@@ -344,9 +342,22 @@ $ roslaunch zed_display_rviz display_zedm.launch
 Reference  code used for [cpp](https://zhuanlan.zhihu.com/p/56565582)
 :::
 
+---
+## VIO
+
+Frame of **ZED Mini**: map (NWU) -> odom (NWU) -> base_link (NWD)
+
+Frame of **ROS**: ENU
+
+Frame of **PX4**: NED
+
+1. Transform pose data of ZED Mini from NWU to ENU
+2. Map the published topic of ENU pose to **mavros/visoin_pose/pose**
+3. Check LOCAL_POSITION_NED and ODOMETRY using Mavlink Inpector on QGC
+
 :::note
-Reference for VIO
-[basalt](https://github.com/chengguizi/basalt-mirror/blob/master/src/ros_live_vio.cpp)
+Reference code for VIO
+[basalt](https://github.com/chengguizi/basalt-mirror/blob/master/src/ros_live_vio.cpp), 
 [vision_to_mavros](https://github.com/thien94/vision_to_mavros/blob/master/src/vision_to_mavros.cpp#L194)
 :::
 ---
