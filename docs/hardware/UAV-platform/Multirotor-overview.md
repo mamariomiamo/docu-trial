@@ -361,6 +361,22 @@ Reference code for VIO
 [vision_to_mavros](https://github.com/thien94/vision_to_mavros/blob/master/src/vision_to_mavros.cpp#L194)
 :::
 ---
+## Camera Calibration
+
+1. Install dependencies and Kalibr package
+```
+$ sudo apt-get install python-setuptools python-rosinstall ipython libeigen3-dev libboost-all-dev doxygen libopencv-dev python-software-properties software-properties-common libpoco-dev python-matplotlib python-scipy python-git python-pip ipython libtbb-dev libblas-dev liblapack-dev python-catkin-tools libv4l-dev
+$ 
+```
+
+```
+$ kalibr_calibrate_cameras --bag /home/safmc/zed-kalibr/Kalibr_data.bag --topics /zedm/zed_node/left/image_rect_color /zedm/zed_node/right/image_rect_color --models pinhole-radtan pinhole-radtan --target /home/safmc/kalibr_workspace/src/kalibr/april_grid.yaml
+
+$ kalibr_calibrate_imu_camera --bag /home/safmc/zed-kalibr/Kalibr_data.bag --cam camchain-homesafmczed-kalibrKalibr_data.yaml --imu /home/safmc/kalibr_workspace/src/kalibr/imu-params.yaml --target /home/safmc/kalibr_workspace/src/kalibr/april_grid.yaml
+
+# enter full path of Kalibr_data.bag and april_grid.yaml
+```
+---
 ## Teraranger Evo 60m
 
 1. Connect the sensor to pixhawk autopilot 
