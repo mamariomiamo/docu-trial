@@ -370,6 +370,8 @@ $
 ```
 
 ```
+$ rosbag record -O Kalibr_data.bag /zedm/zed_node/imu/data_raw /zedm/zed_node/left/image_rect_color /zedm/zed_node/right/image_rect_color
+
 $ kalibr_calibrate_cameras --bag /home/safmc/zed-kalibr/Kalibr_data.bag --topics /zedm/zed_node/left/image_rect_color /zedm/zed_node/right/image_rect_color --models pinhole-radtan pinhole-radtan --target /home/safmc/kalibr_workspace/src/kalibr/april_grid.yaml
 
 $ kalibr_calibrate_imu_camera --bag /home/safmc/zed-kalibr/Kalibr_data.bag --cam camchain-homesafmczed-kalibrKalibr_data.yaml --imu /home/safmc/kalibr_workspace/src/kalibr/imu-params.yaml --target /home/safmc/kalibr_workspace/src/kalibr/april_grid.yaml
