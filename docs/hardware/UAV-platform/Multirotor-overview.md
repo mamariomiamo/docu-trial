@@ -336,6 +336,7 @@ $ roslaunch zed_wrapper zedm.launch
 **7. Data display with Rviz**
 ```
 $ roslaunch zed_display_rviz display_zedm.launch
+$ rosrun rqt_reconfigure rqt_reconfigure
 ```
 
 :::note
