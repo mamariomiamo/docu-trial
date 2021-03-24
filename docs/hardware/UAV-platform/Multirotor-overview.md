@@ -7,28 +7,6 @@ sidebar_label: Multirotor Overview
 
 Multirotor is a class of rotor craft that our group uses for control, perception and swarm algorithm development and testing.
 
-## How to build a UAV platform
-### 1. Solder the ESC to the PCB base plate
-![](./UAVphoto/s1.jpg)
-
-:::warning
-Be careful with the polarity
-:::
-
-### 2. Put PCB base plate to drone frame
-![](./UAVphoto/s2.jpg)
-
-:::tip
-Check if there is enough room for the battery.If not, expand the space 
-:::
-
-### 3. Connect ESC to flight control board and check whether it can be calibrated
-### 4. Put motors on the frame
-### 5. Compelete calibrations in Qgroundcontrol
-### 6. Arrange wires and put propellers
-
----
-
 ## Platform
 
 1. Solder ESC GND pads to AUAV Power Module 
@@ -50,11 +28,11 @@ Check if there is enough room for the battery.If not, expand the space
 ![](./UAVphoto/YJ3.jpg)
 
 :::tip
-Always keep the cables neatly arranged and components fixed in place. It is recommended to use cable ties and double-sided tape to help with the practice. 
+Always keep the cables neatly arranged and components fixed in place. It is recommended to use cable ties and double-sided tape to help with the practice. Try not to bundle the cable near the propellers for safety purposes.
 :::
 
 :::caution
-Try not to bundle the cable near the propellers for safety purposes.
+Always check the polarity.
 :::
 
 ---
@@ -84,7 +62,7 @@ Safety switch: Double blinking suggests that vehicle can be armed while single b
 :::
 
 
-## Tuning
+### **Tuning**
 Tuning is required when creating a **new airframe type** or significantly modifying an existing supported frame. Generally if you're using a supported configuration (e.g. using an airframe in QGroundControl > Airframe) the default tuning should be acceptable (particularly for larger frames).
 
 Reference from [PX4UserGuide](https://docs.px4.io/master/en/config_mc/pid_tuning_guide_multicopter.html) and [dronecode](https://madennis.gitbooks.io/px4user/content/en/advanced_config/pid_tuning_guide_multicopter.html).
@@ -156,7 +134,7 @@ If it oscillates, tune down P. Once the control response is slow but correct, in
 
 ## Pixhawk 
 
-Check out the [website](https://dev.px4.io/master/en/companion_computer/pixhawk_companion.html) to set up the TELEM2 port for companion computer.
+Check out the [website](https://dev.px4.io/master/en/companion_computer/pixhawk_companion.html) to set up the ```TELEM2``` port for companion computer.
 
 ---
 
@@ -233,37 +211,38 @@ $ ls /dev/tty*
 
 >To verify the TX/RX ports, make sure the content you type in shows on the terminal.
 
-### 6. Modify the line shown bel11
+### 6. Modify the line shown below in ```px4.launch``` file
 
-ow in _px4.launch_ file
-(path: ~/catkin_ws/src/mavros/mavros/launch)
+```
+# path: ~/catkin_ws/src/mavros/mavros/launch
+# line to be modified: 
+<arg name ="fcu_url" default="/dev/ttyTHS0:921600">
+```
 
-![](./UAVphoto/YJ4.jpg)
-
-- Set tty to the tty verified in previous step (For example: ttyASM0 -> ttyTHS0)
-- Change the baudrate (the number behind tty) to the baudrate of TELEM2 
+- Set tty to the tty verified in previous step (For example: ```ttyASM0``` -> ```ttyTHS0```)
+- Change the baudrate (the number behind tty) to the baudrate of ```TELEM2```
 
 :::note
-Check the baudrate of TELEM2 on QGroundControl by searching the parameter _SER_TEL2_BAUD_.
+Check the baudrate of ```TELEM2``` on QGroundControl by searching the parameter ```SER_TEL2_BAUD```.
 :::
 
 ### 7. Check the connection between PX4 and Jetson Xavier
 
-7.1. Connect RX, TX and GND pin on Jetson Xavier to TELEM2 on PX4
+7.1. Connect RX, TX and GND pin on Jetson Xavier to ```TELEM2``` on PX4
 
 :::note
-Pin configuration of TELEM2 on PX4 (from left to right) is 5V, RX, TX, CTS, RTS, GND.
+Pin configuration of ```TELEM2``` on PX4 (from left to right) is 5V, RX, TX, CTS, RTS, GND.
 :::
 
 7.2. Boot up PX4 and check if anything shows up on the Minicom on Jetson Xavier
 
 ### 8. Run px4.launch file 
 
-8.1. In px4.launch file, make sure fcu_url is modified as stated in step 5
+8.1. In ```px4.launch``` file, make sure ```fcu_url``` is modified as stated in step 5
 
-8.2. Change gcs_url into "udp://@ip_address"  
+8.2. Change ```gcs_url``` into "udp://@ip_address"  
 
->The IP address inserted is the IP address of the computer where QGroundControl will run on. Therefore, when px4.launch file runs, the QGroundControl will be automatically connected to the pixhawk.
+>The IP address inserted is the IP address of the computer where QGroundControl will run on. Therefore, when ```px4.launch``` file runs, the QGroundControl will be automatically connected to the pixhawk.
 
 8.3. Run the following command in terminal
 ```
@@ -280,10 +259,10 @@ Compiled information can be found [here](https://github.com/DiegoHerrera1890/Pix
 :::
 
 :::tip
-When UART port (THS0) is used to connect to pixhawk, warnings keep showing up while px4.launch file is running. However, when USB port (USB0) is used, px4.launch file runs normally.
-(?)
+When UART port ```THS0``` is used to connect to pixhawk, warnings keep showing up while ```px4.launch``` file is running. However, when USB port ```USB0``` is used, ```px4.launch``` file runs normally.
 :::
 
+---
 
 ## Vicon
 
@@ -312,7 +291,7 @@ $ apt policy cuda  # might have error
 **3. Follow the [instructions](https://www.stereolabs.com/docs/installation/linux/) to install ZED SDK**
 
 :::note
-The program is located at /usr/local/zed/tools
+The SDK is located at ```/usr/local/zed/tools```
 :::
 
 **4. Download [ZED ROS Wrapper](https://www.stereolabs.com/docs/ros/)**
@@ -328,7 +307,7 @@ $ source ./devel/setup.bash
 **5. Open a terminal and use roslaunch to start the ZED node:**
 
 ```
-#ZED Mini camera: 
+# ZED Mini camera: 
 $ roslaunch zed_wrapper zedm.launch
 ```
 **6. Download cv_bridge from [GitHub](https://github.com/ros-perception/vision_opencv)**
@@ -346,33 +325,155 @@ Reference  code used for [cpp](https://zhuanlan.zhihu.com/p/56565582)
 ---
 ## VIO
 
-Frame of **ZED Mini**: map (NWU) -> odom (NWU) -> base_link (NWD)
+### Coordinate Frames
 
-Frame of **ROS**: ENU
+Frame used in **ZED Mini**: 
 
-Frame of **PX4**: NED
-
-1. Transform pose data of ZED Mini from NWU to ENU
-2. Map the published topic of ENU pose to **mavros/visoin_pose/pose**
-3. Check LOCAL_POSITION_NED and ODOMETRY using Mavlink Inpector on QGC
+```map``` (NWU) -> ```odom``` (NWU) -> ```base_link``` (NWU)
 
 :::note
-Reference code for VIO
-[basalt](https://github.com/chengguizi/basalt-mirror/blob/master/src/ros_live_vio.cpp), 
-[vision_to_mavros](https://github.com/thien94/vision_to_mavros/blob/master/src/vision_to_mavros.cpp#L194)
+```map``` is the parent of ```odom``` and ```odom``` is the parent of ```base_link```. The definition of a child frame is based on its parent frame. Both ```map``` and ```odom``` are world-fixed frame while ```base_link``` is attached to the mobile robot base.
 :::
+
+Frame conventions (odom) in **ROS**: 
+
+- Body frame: NWU
+- World frame: ENU
+
+
+Frame used in **PX4**: NED
+
+:::note
+**Reading**
+1. [REP 103](https://www.ros.org/reps/rep-0103.html)
+2. [REP 105](https://www.ros.org/reps/rep-0105.html)
+:::
+
+### Working principle
+
+Feed ```/mavros/odometry/out``` with ```odom``` data of type ```nav_msgs::Odometry``` in the correct frame according to ROS conventions. Then, the functions in ```odom.cpp``` will transform the frame of ```odom``` data into the frame for MAVLINK (PX4). MAVLINK will fuse the ```odom``` data from ```/mavros/odometry/out``` with internal sensors using ```EKF```. Eventually, the final position that is used by the flight controller will be published at ```/mavros/local_position/pose```.
+
+**About MAVROS**
+
+**odom.cpp**
+ * odom_cb() : transforming and sending odometry to fcu
+ * handle_odom() : receiving and transforming odometry from fcu
+
+ ```Frame_id``` required by fcu
+ * header.frame_id = "odom_ned"
+ * child_frame_id = "base_link_frd"
+
+
+
+### Steps
+
+With ```zed-ros-wrapper``` and ```mavros``` running, open ```rviz``` to check the frames orientation and open ```rqt``` to check tf_tree.
+
+![](./UAVphoto/YJ5.jpg)
+
+Since the frames of ```map``` and ```odom``` in ```zed-ros-wrapper``` do ***not*** follow the ROS conventions, the transform by MAVROS from  ```odom``` to ```odom_ned``` is incorrect because it assumes the provided odom data is in ENU (but actually is NWU by ZED). Therefore, changes are needed to be made in code that performs frame transformation. 
+
+In ```mavros/mavros/src/lib/uas_data.cpp```, line 54-68:
+```
+std::vector<geometry_msgs::TransformStamped> transform_vector;
+
+# from ENU to NED
+add_static_transform("map", "map_ned", Eigen::Affine3d(ftf::quaternion_from_rpy(M_PI, 0, M_PI_2)),transform_vector);
+
+# from ENU to NED
+add_static_transform("odom", "odom_ned", Eigen::Affine3d(ftf::quaternion_from_rpy(M_PI, 0, M_PI_2)),transform_vector);
+
+# from NWU to NED
+add_static_transform("base_link", "base_link_frd", Eigen::Affine3d(ftf::quaternion_from_rpy(M_PI, 0, 0)),transform_vector);
+```
+
+In order to match it with ZED frame settings, the following line has to be modified as shown.
+```
+# from NWU to NED
+add_static_transform("odom", "odom_ned", Eigen::Affine3d(ftf::quaternion_from_rpy(M_PI, 0, 0)),transform_vector);
+
+# Modify "map" frame tranformation line if "map_ned" is used.
+# The sequence is in (roll, pitch, yaw)
+# M_PI = 180 degree
+```
+Now check the orientation of ```odom_ned``` on Rviz. 
+
+Then, add the following lines in MAVROS launch file to feed the zed camera ```odom``` data to ```/mavros/odometry/out```
+```
+<!-- You should only remap either vision_pose or odometry, but not both -->
+<!-- /mavros/vision_pose/pose is posestamped, where /mavros/vision_pose/pose is posewithcovariancestamped -->
+
+<remap from="/mavros/odometry/out" to="/zedm/zed_node/odom" />
+```
+Add ```estimator_type: 3``` under _odometry_ in ```px4_config.yaml```.
+
+Run ```roscore```, ```mavros``` and ```zed-ros-wrapper```. Note that ```zed-ros-wrapper``` has to be launched ***after*** messages _EKF2: Yaw Aligned, Tilt Aligned and Reset Horozontal Position_ show on the terminal.
+
+On QGC, set parameter ```MAV_ODOM_LP``` = 1 to loop back odometry. Then, check ```ODOMETRY``` at Mavlink Inspector. To verify the frame, perform the following actions. If all are true, it indicates that the frame is transformed correctly.
+- Yaw clockwise: Quaternion[3] becomes positive/increases
+- Roll to the right: Quaternion[1] becomes positive/increases
+- Pitch up: Quaternion[2] becomes positive/increases
+- At initial position: The values of quaternion should be close to [1,0,0,0]
+
+
+The second problem with ```zed-ros-wrapper``` is ***time synronisation*** between OBC and FCU. The time difference between FCU and OBC is too large. Therefore, ```zed-ros-wrapper``` is modified as following.
+
+In ```zed-ros-wrapper/zed_nodelets/src/zed_nodelet/src/zed_wrapper_nodelet.cpp```, add the following function in public.
+```
+// Huimin's 
+uint64_t get_monotonic_now(void)
+{
+	struct timespec spec;
+	clock_gettime(CLOCK_MONOTONIC, &spec);
+
+	return spec.tv_sec * 1000000000ULL + spec.tv_nsec;
+}
+```
+Then, modify the code accordingly.
+```
+# line 3230-3240
+
+# Original code:
+// Timestamp
+if (mSvoMode) {
+    mFrameTimestamp = ros::Time::now();
+} else {
+    mFrameTimestamp = sl_tools::slTime2Ros(mZed.getTimestamp(sl::TIME_REFERENCE::IMAGE));
+}
+
+# Modified code:
+// Timestamp
+if (mSvoMode) {
+    mFrameTimestamp = ros::Time::now();
+    NODELET_INFO_STREAM("In SVO mode");
+} else {
+    uint64_t monotonic_time = get_monotonic_now();
+    mFrameTimestamp = ros::Time().fromNSec(monotonic_time); 
+}
+
+# Note: publishOdom(mOdom2BaseTransf, mLastZedPose, mFrameTimestamp);
+```
+After catkin build, everything should be working fine. To further optimise VIO, fill the QRC parameter ```EKF2_EV_DELAY`` with the delay time (in milliseconds) between Vision and IMU by checking the Log file using FlightPlot.
+
+
+
 ---
 ## Camera Calibration
 
 1. Install dependencies and Kalibr package
 ```
 $ sudo apt-get install python-setuptools python-rosinstall ipython libeigen3-dev libboost-all-dev doxygen libopencv-dev python-software-properties software-properties-common libpoco-dev python-matplotlib python-scipy python-git python-pip ipython libtbb-dev libblas-dev liblapack-dev python-catkin-tools libv4l-dev
-$ 
 ```
 
+2. Record the data which will be used for calibration later
 ```
 $ rosbag record -O Kalibr_data.bag /zedm/zed_node/imu/data_raw /zedm/zed_node/left/image_rect_color /zedm/zed_node/right/image_rect_color
+```
 
+3. Add ```april_gridl.yaml``` and ```imu-params.yaml``` in the folder
+
+4. Run calibratin file
+```
 $ kalibr_calibrate_cameras --bag /home/safmc/zed-kalibr/Kalibr_data.bag --topics /zedm/zed_node/left/image_rect_color /zedm/zed_node/right/image_rect_color --models pinhole-radtan pinhole-radtan --target /home/safmc/kalibr_workspace/src/kalibr/april_grid.yaml
 
 $ kalibr_calibrate_imu_camera --bag /home/safmc/zed-kalibr/Kalibr_data.bag --cam camchain-homesafmczed-kalibrKalibr_data.yaml --imu /home/safmc/kalibr_workspace/src/kalibr/imu-params.yaml --target /home/safmc/kalibr_workspace/src/kalibr/april_grid.yaml
