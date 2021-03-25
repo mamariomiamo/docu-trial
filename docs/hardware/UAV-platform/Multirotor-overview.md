@@ -407,13 +407,13 @@ Then, add the following lines in MAVROS launch file to feed the zed camera ```od
 ```
 Add ```estimator_type: 3``` under _odometry_ in ```px4_config.yaml```.
 
-Run ```roscore```, ```mavros``` and ```zed-ros-wrapper```. Note that ```zed-ros-wrapper``` has to be launched ***after*** messages _EKF2: Yaw Aligned, Tilt Aligned and Reset Horozontal Position_ show on the terminal.
+Run ```roscore```, ```mavros``` and ```zed-ros-wrapper```. Note that ```zed-ros-wrapper``` has to be launched ***after*** messages _Time offset between FCU and OBC has been initialised_ show on the terminal.
 
 On QGC, set parameter ```MAV_ODOM_LP``` = 1 to loop back odometry. Then, check ```ODOMETRY``` at Mavlink Inspector. To verify the frame, perform the following actions. If all are true, it indicates that the frame is transformed correctly.
 - Yaw clockwise: Quaternion[3] becomes positive/increases
 - Roll to the right: Quaternion[1] becomes positive/increases
 - Pitch up: Quaternion[2] becomes positive/increases
-- At initial position: The values of quaternion should be close to [1,0,0,0]
+- At initial position: The values of quaternion should be close to [1, 0, 0, 0] = [w, x, y, z]
 
 
 The second problem with ```zed-ros-wrapper``` is ***time synronisation*** between OBC and FCU. The time difference between FCU and OBC is too large. Therefore, ```zed-ros-wrapper``` is modified as following.
@@ -453,7 +453,7 @@ if (mSvoMode) {
 
 # Note: publishOdom(mOdom2BaseTransf, mLastZedPose, mFrameTimestamp);
 ```
-After catkin build, everything should be working fine. To further optimise VIO, fill the QRC parameter ```EKF2_EV_DELAY`` with the delay time (in milliseconds) between Vision and IMU by checking the Log file using FlightPlot.
+After catkin build, everything should be working fine. To further optimise VIO, fill the QRC parameter ```EKF2_EV_DELAY``` with the delay time (in milliseconds) between Vision and IMU by checking the Log file using FlightPlot.
 
 
 
