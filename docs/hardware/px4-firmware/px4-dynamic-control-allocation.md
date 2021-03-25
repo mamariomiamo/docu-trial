@@ -37,6 +37,16 @@ The ControlAllocator class has two important members:
 
 | Name                | Type  | Description                                                                                                                  | Default |
 | ----                | ----  | -----------                                                                                                                  | ------- |
+| **VM_INERTIA_XX**   | FLOAT | Inertia matrix, XX component                                                                                                 | 0.01    |
+| **VM_INERTIA_YY**   | FLOAT | Inertia matrix, YY component                                                                                                 | 0.01    |
+| **VM_INERTIA_ZZ**   | FLOAT | Inertia matrix, ZZ component                                                                                                 | 0.01    |
+| **VM_MASS**         | FLOAT | Mass                                                                                                                         | 1.0     |
+| **AVC_*_K**         | FLOAT | Body * axis angular velocity controller gain                                                                                 | 1.0     |
+| **AVC_*_P**         | FLOAT | Body * axis angular velocity P gain (1/s)                                                                                    | 18.0    |
+| **AVC_*_I**         | FLOAT | Body * axis angular velocity I gain (Nm/rad)                                                                                 | 0.2     |
+| **AVC_*_D**         | FLOAT | Body * axis angular velocity D gain                                                                                          | 0.36    |
+| **AVC_*_I_LIM**     | FLOAT | Body * axis angular velocity integrator limit (Nm)                                                                           | 0.3     |
+| **AVC_*_FF**        | FLOAT | Body * axis angular velocity feedforward gain (Nm/(rad/s))                                                                   | 0.0     |
 | **CA_ACTx_MAX**     | FLOAT | Maximus value for actuator `x` (0.0-1.0)                                                                                     | 0.0     |
 | **CA_ACTx_MIN**     | FLOAT | Minumum value for actuator `x` (0.0-1.0)                                                                                     | 0.0     |
 | **CA_AIRFRAME**     | INT32 | Airframe ID (0: Multirotor, 1: Standard VTOL, 2: Tiltrotor VTOL)                                                             | 0       |
@@ -54,6 +64,12 @@ The ControlAllocator class has two important members:
 
 - CA_ACTx...: `x` is from 0 - 15
 - CA_MC_Rx...: `x` is from 0 - 7
+- AVC_*_K: *=X/Y/Z. Global gain of the controller. This gain scales the P, I and D terms of the controller: output = AVC_X_K * (AVC_X_P * error + AVC_X_I * error_integral + AVC_X_D * error_derivative) Set AVC_X_P=1 to implement a PID in the ideal form. Set AVC_X_K=1 to implement a PID in the parallel form.
+- AVC_*_P: *=X/Y/Z. i.e. control output for angular speed error 1 rad/s.
+- AVC_*_I: *=X/Y/Z. Can be set to compensate static thrust difference or gravity center offset.
+- AVC_*_D: *=X/Y/Z. Small values help reduce fast oscillations. If value is too big oscillations will appear again.
+- AVC_*_I_LIM: *=X/Y/Z. Can be set to increase the amount of integrator available to counteract disturbances or reduced to improve settling time after large roll moment trim changes.
+
 
 <https://docs.px4.io/master/en/advanced_config/parameter_reference.html#control-allocation>
 
