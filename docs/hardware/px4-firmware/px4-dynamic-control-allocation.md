@@ -208,93 +208,102 @@ sh /etc/init.d/rc.ctrlalloc
 
 if [ $AUTOCNF = yes ]
 then
-	param set MPC_XY_VEL_I_ACC 4
-	param set MPC_XY_VEL_P_ACC 3
+    param set MPC_XY_VEL_I_ACC 4
+    param set MPC_XY_VEL_P_ACC 3
 
-	param set RTL_DESCEND_ALT 10
-	param set RTL_LAND_DELAY 0
+    param set RTL_DESCEND_ALT 10
+    param set RTL_LAND_DELAY 0
 
-	param set MNT_MODE_IN 0
-	param set MAV_PROTO_VER 2
+    param set MNT_MODE_IN 0
+    param set MAV_PROTO_VER 2
 
-	param set MPC_USE_HTE 0
+    param set MPC_USE_HTE 0
 
     # Set according to actual vehicle model
-	param set VM_MASS 2.66
-	param set VM_INERTIA_XX 0.06
-	param set VM_INERTIA_YY 0.06
-	param set VM_INERTIA_ZZ 0.10
+    param set VM_MASS 1.4995 # 2.05
+    param set VM_INERTIA_XX 0.018343 # 0.029125
+    param set VM_INERTIA_YY 0.019718 # 0.029125
+    param set VM_INERTIA_ZZ 0.032193 # 0.055225
 
-	param set CA_AIRFRAME 0
-	param set CA_METHOD 1
-    
-	param set CA_ACT0_MIN 0.0
-	param set CA_ACT1_MIN 0.0
-	param set CA_ACT2_MIN 0.0
-	param set CA_ACT3_MIN 0.0
-	param set CA_ACT4_MIN 0.0
-	param set CA_ACT5_MIN 0.0
-	param set CA_ACT6_MIN 0.0
-	param set CA_ACT7_MIN 0.0
-	param set CA_ACT0_MAX 1.0
-	param set CA_ACT1_MAX 1.0
-	param set CA_ACT2_MAX 1.0
-	param set CA_ACT3_MAX 1.0
-	param set CA_ACT4_MAX 1.0
-	param set CA_ACT5_MAX 1.0
-	param set CA_ACT6_MAX 1.0
-	param set CA_ACT7_MAX 1.0
+    param set CA_AIRFRAME 0
+    param set CA_METHOD 1
+
+    param set CA_ACT0_MIN 0.0
+    param set CA_ACT1_MIN 0.0
+    param set CA_ACT2_MIN 0.0
+    param set CA_ACT3_MIN 0.0
+    param set CA_ACT4_MIN 0.0
+    param set CA_ACT5_MIN 0.0
+    param set CA_ACT6_MIN 0.0
+    param set CA_ACT7_MIN 0.0
+    param set CA_ACT0_MAX 1.0
+    param set CA_ACT1_MAX 1.0
+    param set CA_ACT2_MAX 1.0
+    param set CA_ACT3_MAX 1.0
+    param set CA_ACT4_MAX 1.0
+    param set CA_ACT5_MAX 1.0
+    param set CA_ACT6_MAX 1.0
+    param set CA_ACT7_MAX 1.0
 
     # X: front, Y: right Z: down
     # KM: CCW: +ve, CW: -ve
+    # PZ: 5.5cm / 22.0cm = 0.25
     # https://docs.px4.io/master/en/airframes/airframe_reference.html#octorotor-coaxial
 
-	param set CA_MC_R0_PX 0.7071068
-	param set CA_MC_R0_PY 0.7071068
-	param set CA_MC_R0_CT 9.5
-	param set CA_MC_R0_KM 0.05
+    param set CA_MC_R0_PX 0.7071068
+    param set CA_MC_R0_PY 0.7071068
+    param set CA_MC_R0_PZ -0.25
+    param set CA_MC_R0_CT 11.7 # 12.523
+    param set CA_MC_R0_KM 0.0137 # 0.0135
 
-	param set CA_MC_R1_PX 0.7071068
-	param set CA_MC_R1_PY -0.7071068
-	param set CA_MC_R1_CT 9.5
-	param set CA_MC_R1_KM -0.05
+    param set CA_MC_R1_PX 0.7071068
+    param set CA_MC_R1_PY -0.7071068
+    param set CA_MC_R1_PZ -0.25
+    param set CA_MC_R1_CT 11.7 # 12.523
+    param set CA_MC_R1_KM -0.0137 # -0.0135
 
-	param set CA_MC_R2_PX -0.7071068
-	param set CA_MC_R2_PY -0.7071068
-	param set CA_MC_R2_CT 9.5
-	param set CA_MC_R2_KM 0.05
+    param set CA_MC_R2_PX -0.7071068
+    param set CA_MC_R2_PY -0.7071068
+    param set CA_MC_R2_PZ -0.25
+    param set CA_MC_R2_CT 11.7 # 12.523
+    param set CA_MC_R2_KM 0.0137 # 0.0135
 
-	param set CA_MC_R3_PX -0.7071068
-	param set CA_MC_R3_PY 0.7071068
-	param set CA_MC_R3_CT 9.5
-	param set CA_MC_R3_KM -0.05
-    
-	param set CA_MC_R4_PX 0.7071068
-	param set CA_MC_R4_PY -0.7071068
-	param set CA_MC_R4_CT 9.5
-	param set CA_MC_R4_KM 0.05
+    param set CA_MC_R3_PX -0.7071068
+    param set CA_MC_R3_PY 0.7071068
+    param set CA_MC_R3_PZ -0.25
+    param set CA_MC_R3_CT 11.7 # 12.523
+    param set CA_MC_R3_KM -0.0137 # -0.0135
 
-	param set CA_MC_R5_PX 0.7071068
-	param set CA_MC_R5_PY 0.7071068
-	param set CA_MC_R5_CT 9.5
-	param set CA_MC_R5_KM -0.05
+    param set CA_MC_R4_PX 0.7071068
+    param set CA_MC_R4_PY -0.7071068
+    param set CA_MC_R4_PZ 0.25
+    param set CA_MC_R4_CT 11.7 # 12.523
+    param set CA_MC_R4_KM 0.0137 # 0.0135
 
-	param set CA_MC_R6_PX -0.7071068
-	param set CA_MC_R6_PY 0.7071068
-	param set CA_MC_R6_CT 9.5
-	param set CA_MC_R6_KM 0.05
+    param set CA_MC_R5_PX 0.7071068
+    param set CA_MC_R5_PY 0.7071068
+    param set CA_MC_R5_PZ 0.25
+    param set CA_MC_R5_CT 11.7 # 12.523
+    param set CA_MC_R5_KM -0.0137 # -0.0135
 
-	param set CA_MC_R7_PX -0.7071068
-	param set CA_MC_R7_PY -0.7071068
-	param set CA_MC_R7_CT 9.5
-	param set CA_MC_R7_KM -0.05
+    param set CA_MC_R6_PX -0.7071068
+    param set CA_MC_R6_PY 0.7071068
+    param set CA_MC_R6_PZ 0.25
+    param set CA_MC_R6_CT 11.7 # 12.523
+    param set CA_MC_R6_KM 0.0137 # 0.0135
+
+    param set CA_MC_R7_PX -0.7071068
+    param set CA_MC_R7_PY -0.7071068
+    param set CA_MC_R7_PZ 0.25
+    param set CA_MC_R7_CT 11.7 # 12.523
+    param set CA_MC_R7_KM -0.0137 # -0.0135
 fi
 
 set MAV_TYPE 13
 
-# set MIXER hexa_x
+# set MIXER octo_cox
 set MIXER direct
+set PWM_OUT 12345678
 
 ```
-
 </details>
