@@ -20,6 +20,8 @@ Currently, PX4 uses static mixing tables that are generated from airframe config
 
 ## Overall Structure
 
+Temporarily located [here](https://lirc572.github.io/PX4-Notes/#/content/Control-Allocation)
+
 ### Control Allocator
 
 ![control allocator class diagram](./img/control_allocation.png)

@@ -16,6 +16,7 @@
     "@mdx-js/react": "^1.6.19",
     "clsx": "^1.1.1",
     "docusaurus-lunr-search": "^2.1.7",
+    "mermaid": "^8.9.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "rehype-katex": "^4.0.0",
