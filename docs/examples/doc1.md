@@ -203,7 +203,7 @@ This is a warning
 
 ## Diagrams (Mermaid)
 
-Refert to (Mermaid website](https://mermaid-js.github.io/mermaid/)
+Refer to (Mermaid website](https://mermaid-js.github.io/mermaid/)
 
 import Mermaid from '@theme/Mermaid';
 

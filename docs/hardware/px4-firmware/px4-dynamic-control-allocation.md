@@ -2,6 +2,9 @@
 hide_title: true
 sidebar_label: PX4 Dynamic Control Allocation
 ---
+
+import Mermaid from '@theme/Mermaid';
+
 # PX4 Dynamic Control Allocation
 
 <https://www.youtube.com/watch?v=xjLM9whwjO4>
@@ -22,11 +25,81 @@ Currently, PX4 uses static mixing tables that are generated from airframe config
 
 Temporarily located [here](https://lirc572.github.io/PX4-Notes/#/content/Control-Allocation)
 
+<details>
+<summary>angular_velocity_controller</summary>
+
+<details>
+<summary>Parameters</summary>
+
+Parameter     | Description
+---           | ---
+AVC_*_P       | Body * axis angular velocity P gain (unit 1/s)
+AVC_*_I       | Body * axis angular velocity I gain (unit Nm/rad)
+AVC_*_D       | Body * axis angular velocity D gain
+AVC_*_I_LIM   | Body * axis angular velocity integrator limit (unit Nm)
+AVC_*_FF      | Body * axis angular velocity feedforward gain (unit Nm/(rad/s))
+AVC_*_K       | Body * axis angular velocity controller global gain
+VM_MASS       | Mass (unit kg)
+VM_INERTIA_XX | Inertia matrix, XX component (unit kg m^2)
+VM_INERTIA_YY | Inertia matrix, YY component (unit kg m^2)
+VM_INERTIA_ZZ | Inertia matrix, ZZ component (unit kg m^2)
+VM_INERTIA_XY | Inertia matrix, XY component (unit kg m^2)
+VM_INERTIA_XZ | Inertia matrix, XZ component (unit kg m^2)
+VM_INERTIA_YZ | Inertia matrix, YZ component (unit kg m^2)
+MPC_THR_HOVER | Hover thrust (Vertical thrust required to hover)
+MPC_USE_HTE   | Hover thrust source selector (Set false to use the fixed parameter MPC_THR_HOVER Set true to use the value computed by the hover thrust estimator) see [this PR for details](https://github.com/PX4/PX4-Autopilot/pull/13981#issue-364553361)
+
+</details>
+
+<details>
+<summary>uORB Subscriptions</summary>
+
+Topic                        | Description
+---                          | ---
+control_allocator_status     | ...
+vehicle_angular_acceleration | ...
+vehicle_control_mode         | ...
+vehicle_land_detected        | ...
+vehicle_rates_setpoint       | `timestamp`, `roll`, `pitch`, `yaw`, `thrust_body[3]` (for multicopter, [0] and [1] are usually 0 and [2] is negative throttle demand, normalized in body NED frame [-1, 1])
+vehicle_status               | ...
+hover_thrust_estimate        | ...
+vehicle_angular_velocity     | ...
+
+</details>
+
+<details>
+<summary>uORB Publications</summary>
+
+Topic                                 | Description
+---                                   | ---
+rate_ctrl_status                      | `timestamp`, `rollspeed_integ`, `pitchspeed_integ`, `yawspeed_integ`
+vehicle_angular_acceleration_setpoint | `timestamp`, `timestamp_sample`, `xyz[3]`
+vehicle_thrust_setpoint               | `timestamp`, `timestamp_sample`, `xyz[3]` (unit N)
+vehicle_torque_setpoint               | `timestamp`, `timestamp_sample`, `xyz[3]` (unit N.m)
+
+</details>
+
+</details>
+
+<details>
+<summary>control_allocator</summary>
+
+...
+
+</details>
+
+<Mermaid chart={`
+	graph LR;
+		A-->B;
+		B-->C;
+		B-->D[plop lanflz eknlzeknfz];
+`}/>
+
 ### Control Allocator
 
 ![control allocator class diagram](./img/control_allocation.png)
 
-[Download the Draw.io source of the diagram above](./img/ca.drawio)
+[Draw.io source](./img/ca.drawio)
 
 The source of the control allocation module can be found at `PX4-Autopilot/src/modules/control_allocator/`
 
