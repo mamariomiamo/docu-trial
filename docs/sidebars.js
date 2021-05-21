@@ -154,6 +154,12 @@ module.exports = {
       'research/calibration/verify-by-triangulation-depth',
       'research/calibration/Calibration results/Calibration results', 
       ],
+      'Collision Avoidance': [
+      'research/collision-avoidance/problems',
+      'research/collision-avoidance/design-choices',
+      'research/collision-avoidance/conjectures​',
+      'research/collision-avoidance/controls',
+      ],
       'VIO': [
       'research/vio/basalt-overview',
       'research/vio/basalt-tuning',
