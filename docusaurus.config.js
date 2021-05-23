@@ -41,7 +41,7 @@ module.exports = {
     
             // Hardware
               {
-              to: 'docs/hardware/jetson-tx2',
+              to: 'docs/hardware/jetson-tx2/flash-existing-image',
               activeBasePath: 'docs/hardware',
               label: 'Hardware',
               position: 'left',
@@ -165,7 +165,7 @@ module.exports = {
 
             // Research
             {
-              to: 'docs/research/',
+              to: 'docs/research/flight-data/flight-data-analysis',
               activeBasePath: 'docs/research/',
               label: 'Research',
               position: 'left',
@@ -180,6 +180,11 @@ module.exports = {
                   activeBasePath:'docs/research/calibration',
                   label: 'Sensor Calibration',
                   to: 'docs/research/calibration/getting-started'
+                },
+                {
+                  activeBasePath:'docs/research/collision-avoidance',
+                  label: 'Collision Avoidance',
+                  to: 'docs/research/collision-avoidance/overview-problems'
                 },
                 {
                   activeBasePath:'docs/research/vio',

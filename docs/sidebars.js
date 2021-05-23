@@ -155,9 +155,8 @@ module.exports = {
       'research/calibration/Calibration results/Calibration results', 
       ],
       'Collision Avoidance': [
-      'research/collision-avoidance/problems',
+      'research/collision-avoidance/overview-problems',
       'research/collision-avoidance/design-choices',
-      'research/collision-avoidance/conjectures​',
       'research/collision-avoidance/controls',
       ],
       'VIO': [
